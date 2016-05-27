@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
+    <entity name="Studio" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" syncable="YES"/>
+        <fetchedProperty name="fetchedProperty" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Studio"/>
+        </fetchedProperty>
+    </entity>
+    <entity name="VideoAssets" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="localIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationKey" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="asset" inverseEntity="VideoMetaData" syncable="YES"/>
+        <fetchedProperty name="studio" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Studio" predicateString=" locationKey == $FETCH_SOURCE.locationKey"/>
+        </fetchedProperty>
+    </entity>
+    <entity name="VideoMetaData" syncable="YES">
+        <attribute name="follower" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="leader" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="asset" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoAssets" inverseName="metaData" inverseEntity="VideoAssets" syncable="YES"/>
+        <relationship name="studio" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Studio" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="VideoAssets" positionX="-11" positionY="-144" width="128" height="146"/>
+        <element name="Studio" positionX="-9" positionY="34" width="128" height="131"/>
+        <element name="VideoMetaData" positionX="187" positionY="-135" width="128" height="118"/>
+    </elements>
+</model>
