@@ -49,13 +49,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func populateStudioData() {
         let fetchRequest = NSFetchRequest()
+        
 
-        let locationEntity = NSEntityDescription.entityForName("Studio", inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        let locationEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
         fetchRequest.entity = locationEntity
         
         fetchRequest.fetchBatchSize = 0
         
-        let sortDescriptor = NSSortDescriptor(key: "locationKey", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: StudioAttributes.locationKey, ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -63,21 +64,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         do {
             try fetchedResultsController.performFetch()
-            for studio in fetchedResultsController.fetchedObjects! as! [NSManagedObject] {
-                if let key = studio.valueForKey("locationKey") as? String{
-                    switch key{
-                    case "4744.0:4744.0":
-                        studio.setValue("Sea To Sky", forKey: "name")
-                    case "4562.0:4562.0":
-                        studio.setValue("Bridge Town", forKey: "name")
-                    case "4542.0:4542.0":
-                        studio.setValue("Uptown Ballroom", forKey: "name")
-                    case "4540.0:4540.0":
-                        studio.setValue("Old Uptown Ballroom", forKey: "name")
-                    case "4557.0:4557.0":
-                        studio.setValue("Rose City Swing", forKey: "name")
-                        
-                    default: break
+            if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
+                for studio in studios {
+                    if let key = studio.valueForKey("locationKey") as? String {
+                        switch key {
+                        case "4744.0:4744.0":
+                            studio.name = "Sea To Sky"
+                        case "4562.0:4562.0":
+                            studio.name = "Bridge Town"
+                        case "4542.0:-12279.0":
+                            studio.name = "Uptown Ballroom"
+                        case "4540.0:4540.0":
+                            studio.name = "Old Uptown Ballroom"
+                        case "4557.0:4557.0":
+                            studio.name = "Rose City Swing"
+                            
+                        default: break
+                        }
                     }
                 }
             }
@@ -95,12 +98,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func populateLocalVideoData() {
         
         let fetchRequest = NSFetchRequest()
-        let locationEntity = NSEntityDescription.entityForName("Studio", inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        guard let locationEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext) else { return }
         fetchRequest.entity = locationEntity
         
         fetchRequest.fetchBatchSize = 0
         
-        let sortDescriptor = NSSortDescriptor(key: "locationKey", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key:  StudioAttributes.locationKey, ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -108,33 +111,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         do {
             try fetchedResultsController.performFetch()
-            for location in fetchedResultsController.fetchedObjects!  {
-                if let key = location.valueForKey("locationKey") as? String, let address = location.valueForKey("address") as? String {
+            if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
+
+            for studio in studios {
+                if let key = studio.locationKey, let address = studio.address {
                     if DVOCoreData.foundAddresses[key] == nil {
                         DVOCoreData.foundAddresses[key] = address
-                        print("\(key) \(address)")
                     } else {
-                        DVOCoreData.sharedObject.managedObjectContext.deleteObject(location as! NSManagedObject)
+                        DVOCoreData.sharedObject.managedObjectContext.deleteObject(studio)
                     }
                 }
+            }
             }
             
         } catch {
             abort()
         }
-        let videoAssetEntity = NSEntityDescription.entityForName("VideoAssets", inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        guard let videoAssetEntity = NSEntityDescription.entityForName(VideoAssets.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext) else { return }
         
         let videoAssetFetch = NSFetchRequest()
         videoAssetFetch.entity = videoAssetEntity
-        videoAssetFetch.sortDescriptors = [NSSortDescriptor(key: "locationKey", ascending: false)]
+        videoAssetFetch.sortDescriptors = [NSSortDescriptor(key: VideoAssetsAttributes.locationKey, ascending: false)]
         let videoAssetFetchResultsController = NSFetchedResultsController(fetchRequest: videoAssetFetch, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
         var localKeys = [String:Bool]()
         do {
             try videoAssetFetchResultsController.performFetch()
-            for video in videoAssetFetchResultsController.fetchedObjects!  {
-                if let key = video.valueForKey("localIdentifier") as? String {
-                    if localKeys[key] == nil {
-                        localKeys[key] = true
+            if let vidoes = videoAssetFetchResultsController.fetchedObjects as? [VideoAssets] {
+                for video in vidoes  {
+                    if let key = video.localIdentifier {
+                        if localKeys[key] == nil {
+                            localKeys[key] = true
+                        }
                     }
                 }
             }
@@ -146,18 +153,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         allVideosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         allVideosOptions.predicate = NSPredicate(format: "mediaType = \(PHAssetMediaType.Video.rawValue) ")
         let allVideos = PHAsset.fetchAssetsWithOptions(allVideosOptions)
+        
         allVideos.enumerateObjectsUsingBlock() { (asset, index, done) in
             if let thisAsset = asset as? PHAsset {
                 if localKeys[thisAsset.localIdentifier] == nil {
-                    let thisVideo = VideoAsset()
-                    thisVideo.asset = thisAsset
-                    let newVideoAsset = NSManagedObject(entity: videoAssetEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-                    newVideoAsset.setValue(thisAsset.localIdentifier, forKey: "localIdentifier")
+                    let newVideoAsset = VideoAssets(entity: videoAssetEntity, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+                    newVideoAsset.localIdentifier = thisAsset.localIdentifier
                     if let thisLocation = thisAsset.location {
-                        let locationKey = "\(round(thisLocation.coordinate.latitude*100)):\(round(thisLocation.coordinate.latitude*100))"
-                        newVideoAsset.setValue(locationKey, forKey: "LocationKey")
+                        let locationKey = "\(round(thisLocation.coordinate.latitude*100)):\(round(thisLocation.coordinate.longitude*100))"
+                        newVideoAsset.locationKey = locationKey
                         if let foundAddress = DVOCoreData.foundAddresses[locationKey] {
-                            thisVideo.address = foundAddress
+                            newVideoAsset.address = foundAddress
                         } else {
                             let locator = CLGeocoder()
                             locator.reverseGeocodeLocation(thisLocation) { (placemarks, error ) in
@@ -165,10 +171,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                     if let addressDictionary = placemark.addressDictionary as? [String:AnyObject] {
                                         if let address = addressDictionary["FormattedAddressLines"] as? [String] {
                                             DVOCoreData.foundAddresses["locationKey"] = "\(address[0]), \(address[1])"
-                                            thisVideo.address = "\(address[0]), \(address[1])"
-                                            let newEntity = NSManagedObject(entity: locationEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-                                            newEntity.setValue("\(address[0]), \(address[1])", forKey: "address")
-                                            newEntity.setValue(locationKey, forKey: "locationKey")
+                                            newVideoAsset.address = "\(address[0]), \(address[1])"
+                                            print(locationKey)
+                                            print("\(address[0]), \(address[1])")
+                                            let newStudio = Studio(entity: locationEntity, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+                                            newStudio.address = "\(address[0]), \(address[1])"
+                                            newStudio.locationKey = locationKey
                                             do {
                                                 try DVOCoreData.sharedObject.managedObjectContext.save()
                                             } catch {
@@ -181,7 +189,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         }
                     }
                     if let created = thisAsset.creationDate {
-                        newVideoAsset.setValue(created, forKey: "createdDate")
+                        newVideoAsset.createdDate = created
                     }
                 }
             }

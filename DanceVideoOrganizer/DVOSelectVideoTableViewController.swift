@@ -25,12 +25,12 @@ class DVOSelectVideoTableViewController: UITableViewController {
     func fetchPhonos() {
         let fetchRequest = NSFetchRequest()
         
-        let locationEntity = NSEntityDescription.entityForName("VideoAssets", inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-        fetchRequest.entity = locationEntity
+        let assetEntity = NSEntityDescription.entityForName(VideoAssets.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = assetEntity
         
         fetchRequest.fetchBatchSize = 0
         
-        let sortDescriptor = NSSortDescriptor(key: "createdDate", ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: VideoAssetsAttributes.createdDate, ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -38,46 +38,40 @@ class DVOSelectVideoTableViewController: UITableViewController {
         
         do {
             try fetchedResultsController.performFetch()
-            for asset in fetchedResultsController.fetchedObjects! {
-                let newVideo = VideoAsset()
-                if let creationDate = asset.valueForKey("createdDate") as? NSDate {
-                    newVideo.creationDate = creationDate
-                }
-                if let locationKey = asset.valueForKey("locationKey") as? String {
-                    if let address = DVOCoreData.foundAddresses[locationKey] {
-                        newVideo.address = address
-                        newVideo.locationKey = locationKey
-                    }
-                    if let foundLocations = asset.valueForKey("studio") as? [AnyObject] {
+            if let assets = fetchedResultsController.fetchedObjects as? [VideoAssets]{
+                for asset in assets {
+                    let newAsset = VideoAsset()
+                    newAsset.address = asset.address ?? ""
+                    newAsset.locationKey = asset.locationKey ?? ""
+                    if let foundLocations = asset.valueForKey("studio") as? [Studio] {
                         for location in foundLocations {
                             if let locationName = location.valueForKey("name") as? String {
-                                newVideo.locationName = locationName
+                                newAsset.locationName = locationName
                             }
                         }
                     }
-                }
-                if let localIdentifier = asset.valueForKey("localIdentifier") as? String {
-                    let allVideosOptions = PHFetchOptions()
-                    allVideosOptions.predicate = NSPredicate(format: "localIdentifier = \"\(localIdentifier)\"")
-                    let getVideos = PHAsset.fetchAssetsWithOptions(allVideosOptions)
-                    getVideos.enumerateObjectsUsingBlock() { (asset, index, done) in
-                        let imageManager = PHCachingImageManager()
-                        imageManager.requestImageForAsset(asset as! PHAsset, targetSize: CGSize(width: 500, height: 500) , contentMode: .AspectFill, options: nil) { (result, info) in
-                            if let thisResult = result {
-                                newVideo.thumbNail = thisResult
+                    if let localIdentifier = asset.valueForKey("localIdentifier") as? String {
+                        let allVideosOptions = PHFetchOptions()
+                        allVideosOptions.predicate = NSPredicate(format: "localIdentifier = \"\(localIdentifier)\"")
+                        let getVideos = PHAsset.fetchAssetsWithOptions(allVideosOptions)
+                        getVideos.enumerateObjectsUsingBlock() { (asset, index, done) in
+                            let imageManager = PHCachingImageManager()
+                            imageManager.requestImageForAsset(asset as! PHAsset, targetSize: CGSize(width: 500, height: 500) , contentMode: .AspectFill, options: nil) { (result, info) in
+                                if let thisResult = result {
+                                    newAsset.thumbNail = thisResult
+                                }
+                            }
+                            imageManager.requestAVAssetForVideo(asset as! PHAsset, options: nil ) { (videoAsset, mix, info) in
+                                newAsset.videoAsset = videoAsset
                             }
                         }
-                        imageManager.requestAVAssetForVideo(asset as! PHAsset, options: nil ) { (videoAsset, mix, info) in
-                            newVideo.videoAsset = videoAsset
-                        }
                     }
+                    self.videoAssets.append(newAsset)
                 }
-                self.videoAssets.append(newVideo)
             }
         } catch {
             print("Counld not fetch photots")
         }
-        print(self.videoAssets.count)
     }
     
     override func didReceiveMemoryWarning() {
@@ -103,6 +97,7 @@ class DVOSelectVideoTableViewController: UITableViewController {
         } else {
             cell.locationLabel.text = asset.address
         }
+        cell.locationKeyLabel.text = asset.locationKey
         cell.dateLabel.text = "\(asset.creationDate)"
         cell.videoThumbNailImage.image = asset.thumbNail
         cell.videoThumbNailImage.contentMode = .ScaleAspectFit
@@ -112,10 +107,8 @@ class DVOSelectVideoTableViewController: UITableViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
-            let controller = segue.destinationViewController as! AVPlayerViewController
-            controller.player =  AVPlayer(playerItem: AVPlayerItem(asset: self.videoAssets[indexPath.item].videoAsset!))
-            controller.player?.currentItem?.seekToTime(CMTimeMakeWithSeconds(15,1))
-            controller.player?.play()
+            let controller = segue.destinationViewController as! DVOEditVideoDataViewController
+            controller.videoAsset = self.videoAssets[indexPath.item]
         }
     }
 
@@ -125,6 +118,7 @@ class VideoCell: UITableViewCell {
     
     @IBOutlet weak var videoThumbNailImage: UIImageView!
     @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var locationKeyLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     
 }
