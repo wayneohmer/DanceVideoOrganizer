@@ -14,7 +14,7 @@ import AVKit
 class DVOSelectVideoTableViewController: UITableViewController {
 
     var allVideos = PHFetchResult()
-    var videoAssets = [VideoAsset]()
+    var videoAssets = [DVOVideoAsset]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,9 +40,10 @@ class DVOSelectVideoTableViewController: UITableViewController {
             try fetchedResultsController.performFetch()
             if let assets = fetchedResultsController.fetchedObjects as? [VideoAssets]{
                 for asset in assets {
-                    let newAsset = VideoAsset()
+                    let newAsset = DVOVideoAsset()
                     newAsset.address = asset.address ?? ""
                     newAsset.locationKey = asset.locationKey ?? ""
+                    newAsset.creationDate = asset.createdDate ?? NSDate()
                     if let foundLocations = asset.valueForKey("studio") as? [Studio] {
                         for location in foundLocations {
                             if let locationName = location.valueForKey("name") as? String {
@@ -98,7 +99,7 @@ class DVOSelectVideoTableViewController: UITableViewController {
             cell.locationLabel.text = asset.address
         }
         cell.locationKeyLabel.text = asset.locationKey
-        cell.dateLabel.text = "\(asset.creationDate)"
+        cell.dateLabel.text = DVODateFormatter.formattedDate(asset.creationDate)
         cell.videoThumbNailImage.image = asset.thumbNail
         cell.videoThumbNailImage.contentMode = .ScaleAspectFit
         cell.layoutIfNeeded()

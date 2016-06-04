@@ -13,6 +13,9 @@ public struct StudioAttributes {
     static let address = "address"
     static let locationKey = "locationKey"
     static let name = "name"
+    static let metaData = "metaData"
+    static let instructors = "instructors"
+    static let defaultInstructor = "defaultInstructor"
 }
 
 public class Studio: NSManagedObject {
@@ -22,6 +25,7 @@ public class Studio: NSManagedObject {
     @NSManaged var name: String?
     @NSManaged var locationKey: String?
     @NSManaged var metaData: VideoMetaData?
-
+    @NSManaged var instructors: NSSet?
+    @NSManaged var defaultInstructor: Dancer?
 
 }

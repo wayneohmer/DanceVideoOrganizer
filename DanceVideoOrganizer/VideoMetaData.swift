@@ -9,8 +9,22 @@
 import Foundation
 import CoreData
 
+public struct VideoMetaDataAttributes {
+    static let title = "title"
+    static let type = "type"
+    static let leader = "leader"
+    static let follower = "follower"
+    static let location = "location"
+    static let asset = "asset"
+    static let studio = "studio"
+    static let instructors = "instructors"
+
+}
+
+
 public class VideoMetaData: NSManagedObject {
     
+    static let entityName = "VideoMetaData"
     @NSManaged var title: String?
     @NSManaged var type: String?
     @NSManaged var leader: String?
@@ -18,7 +32,6 @@ public class VideoMetaData: NSManagedObject {
     @NSManaged var location: String?
     @NSManaged var asset: VideoAssets?
     @NSManaged var studio: Studio?
-
-// Insert code here to add functionality to your managed object subclass
+    @NSManaged var instructors: NSSet?
 
 }

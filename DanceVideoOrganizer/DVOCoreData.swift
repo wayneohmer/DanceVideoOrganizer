@@ -76,4 +76,15 @@ class DVOCoreData: NSObject {
         }
     }
 
+    class func fetchStudios() -> NSFetchedResultsController {
+
+        let fetchRequest = NSFetchRequest()
+        let locationEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = locationEntity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: StudioAttributes.locationKey, ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+
+    }
 }

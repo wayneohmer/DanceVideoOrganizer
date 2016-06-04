@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD71961D1D0200C600A49D11 /* DVODateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71961C1D0200C600A49D11 /* DVODateFormatter.swift */; };
+		CD71961F1D02172D00A49D11 /* DVOTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71961E1D02172D00A49D11 /* DVOTextField.swift */; };
+		CD7196221D02175A00A49D11 /* DVOInputAccessoryBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD7196201D02175A00A49D11 /* DVOInputAccessoryBar.xib */; };
+		CD7196231D02175A00A49D11 /* DVOInputAccessoryBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7196211D02175A00A49D11 /* DVOInputAccessoryBar.swift */; };
+		CD7196251D021F8000A49D11 /* DVOMetaDataTitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7196241D021F8000A49D11 /* DVOMetaDataTitleViewController.swift */; };
+		CD7196281D023D3500A49D11 /* DVOLocationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7196271D023D3500A49D11 /* DVOLocationTableViewController.swift */; };
 		CD8A7E231CF7988D00D7DC01 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E221CF7988D00D7DC01 /* AppDelegate.swift */; };
 		CD8A7E281CF7988D00D7DC01 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD8A7E261CF7988D00D7DC01 /* Main.storyboard */; };
 		CD8A7E2B1CF7988D00D7DC01 /* DanceVideoOrganizer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E291CF7988D00D7DC01 /* DanceVideoOrganizer.xcdatamodeld */; };
@@ -15,13 +21,16 @@
 		CD8A7E3B1CF7988D00D7DC01 /* DanceVideoOrganizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E3A1CF7988D00D7DC01 /* DanceVideoOrganizerTests.swift */; };
 		CD8A7E461CF7988D00D7DC01 /* DanceVideoOrganizerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E451CF7988D00D7DC01 /* DanceVideoOrganizerUITests.swift */; };
 		CD8A7E541CF799CF00D7DC01 /* DVOMainMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E531CF799CF00D7DC01 /* DVOMainMenuTableViewController.swift */; };
-		CD8A7E561CF79B6700D7DC01 /* VideoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E551CF79B6700D7DC01 /* VideoAsset.swift */; };
+		CD8A7E561CF79B6700D7DC01 /* DVOVideoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E551CF79B6700D7DC01 /* DVOVideoAsset.swift */; };
 		CD8A7E591CF79BE300D7DC01 /* DVOCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E581CF79BE300D7DC01 /* DVOCoreData.swift */; };
 		CD8A7E5B1CF7AC3F00D7DC01 /* DVOSelectVideoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E5A1CF7AC3F00D7DC01 /* DVOSelectVideoTableViewController.swift */; };
 		CD8A7E751CF8B66C00D7DC01 /* Studio.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E6F1CF8B66C00D7DC01 /* Studio.swift */; };
 		CD8A7E771CF8B66C00D7DC01 /* VideoAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E711CF8B66C00D7DC01 /* VideoAssets.swift */; };
 		CD8A7E791CF8B66C00D7DC01 /* VideoMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E731CF8B66C00D7DC01 /* VideoMetaData.swift */; };
 		CD8A7E811CFE340400D7DC01 /* DVOEditVideoDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E801CFE340400D7DC01 /* DVOEditVideoDataViewController.swift */; };
+		CD8A7E841CFF853000D7DC01 /* DVOMetaDataEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E831CFF853000D7DC01 /* DVOMetaDataEntryCell.swift */; };
+		CD8A7E861CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E851CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift */; };
+		CD8A7E8A1CFF921300D7DC01 /* Dancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E881CFF921300D7DC01 /* Dancer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +51,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CD71961C1D0200C600A49D11 /* DVODateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVODateFormatter.swift; sourceTree = "<group>"; };
+		CD71961E1D02172D00A49D11 /* DVOTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOTextField.swift; sourceTree = "<group>"; };
+		CD7196201D02175A00A49D11 /* DVOInputAccessoryBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVOInputAccessoryBar.xib; sourceTree = "<group>"; };
+		CD7196211D02175A00A49D11 /* DVOInputAccessoryBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOInputAccessoryBar.swift; sourceTree = "<group>"; };
+		CD7196241D021F8000A49D11 /* DVOMetaDataTitleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOMetaDataTitleViewController.swift; sourceTree = "<group>"; };
+		CD7196271D023D3500A49D11 /* DVOLocationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOLocationTableViewController.swift; sourceTree = "<group>"; };
 		CD8A7E1F1CF7988D00D7DC01 /* DanceVideoOrganizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DanceVideoOrganizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD8A7E221CF7988D00D7DC01 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CD8A7E271CF7988D00D7DC01 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -56,13 +71,16 @@
 		CD8A7E451CF7988D00D7DC01 /* DanceVideoOrganizerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanceVideoOrganizerUITests.swift; sourceTree = "<group>"; };
 		CD8A7E471CF7988D00D7DC01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CD8A7E531CF799CF00D7DC01 /* DVOMainMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOMainMenuTableViewController.swift; sourceTree = "<group>"; };
-		CD8A7E551CF79B6700D7DC01 /* VideoAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoAsset.swift; sourceTree = "<group>"; };
+		CD8A7E551CF79B6700D7DC01 /* DVOVideoAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOVideoAsset.swift; sourceTree = "<group>"; };
 		CD8A7E581CF79BE300D7DC01 /* DVOCoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOCoreData.swift; sourceTree = "<group>"; };
 		CD8A7E5A1CF7AC3F00D7DC01 /* DVOSelectVideoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOSelectVideoTableViewController.swift; sourceTree = "<group>"; };
 		CD8A7E6F1CF8B66C00D7DC01 /* Studio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Studio.swift; sourceTree = "<group>"; };
 		CD8A7E711CF8B66C00D7DC01 /* VideoAssets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoAssets.swift; sourceTree = "<group>"; };
 		CD8A7E731CF8B66C00D7DC01 /* VideoMetaData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoMetaData.swift; sourceTree = "<group>"; };
 		CD8A7E801CFE340400D7DC01 /* DVOEditVideoDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOEditVideoDataViewController.swift; sourceTree = "<group>"; };
+		CD8A7E831CFF853000D7DC01 /* DVOMetaDataEntryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOMetaDataEntryCell.swift; sourceTree = "<group>"; };
+		CD8A7E851CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOMetaDataEntryLayout.swift; sourceTree = "<group>"; };
+		CD8A7E881CFF921300D7DC01 /* Dancer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dancer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +108,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD7196261D022A8800A49D11 /* Text Views */ = {
+			isa = PBXGroup;
+			children = (
+				CD71961E1D02172D00A49D11 /* DVOTextField.swift */,
+				CD7196201D02175A00A49D11 /* DVOInputAccessoryBar.xib */,
+				CD7196211D02175A00A49D11 /* DVOInputAccessoryBar.swift */,
+			);
+			name = "Text Views";
+			sourceTree = "<group>";
+		};
 		CD8A7E161CF7988C00D7DC01 = {
 			isa = PBXGroup;
 			children = (
@@ -118,7 +146,8 @@
 				CD8A7E571CF79B6B00D7DC01 /* Models */,
 				CD8A7E531CF799CF00D7DC01 /* DVOMainMenuTableViewController.swift */,
 				CD8A7E5A1CF7AC3F00D7DC01 /* DVOSelectVideoTableViewController.swift */,
-				CD8A7E801CFE340400D7DC01 /* DVOEditVideoDataViewController.swift */,
+				CD7196261D022A8800A49D11 /* Text Views */,
+				CD8A7E821CFF84E800D7DC01 /* MetaData Entry */,
 				CD8A7E261CF7988D00D7DC01 /* Main.storyboard */,
 				CD8A7E2C1CF7988D00D7DC01 /* Assets.xcassets */,
 				CD8A7E2E1CF7988D00D7DC01 /* LaunchScreen.storyboard */,
@@ -149,12 +178,26 @@
 		CD8A7E571CF79B6B00D7DC01 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				CD8A7E551CF79B6700D7DC01 /* VideoAsset.swift */,
+				CD8A7E551CF79B6700D7DC01 /* DVOVideoAsset.swift */,
 				CD8A7E6F1CF8B66C00D7DC01 /* Studio.swift */,
 				CD8A7E711CF8B66C00D7DC01 /* VideoAssets.swift */,
 				CD8A7E731CF8B66C00D7DC01 /* VideoMetaData.swift */,
+				CD8A7E881CFF921300D7DC01 /* Dancer.swift */,
+				CD71961C1D0200C600A49D11 /* DVODateFormatter.swift */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		CD8A7E821CFF84E800D7DC01 /* MetaData Entry */ = {
+			isa = PBXGroup;
+			children = (
+				CD8A7E801CFE340400D7DC01 /* DVOEditVideoDataViewController.swift */,
+				CD8A7E851CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift */,
+				CD7196241D021F8000A49D11 /* DVOMetaDataTitleViewController.swift */,
+				CD8A7E831CFF853000D7DC01 /* DVOMetaDataEntryCell.swift */,
+				CD7196271D023D3500A49D11 /* DVOLocationTableViewController.swift */,
+			);
+			name = "MetaData Entry";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,6 +308,7 @@
 				CD8A7E301CF7988D00D7DC01 /* LaunchScreen.storyboard in Resources */,
 				CD8A7E2D1CF7988D00D7DC01 /* Assets.xcassets in Resources */,
 				CD8A7E281CF7988D00D7DC01 /* Main.storyboard in Resources */,
+				CD7196221D02175A00A49D11 /* DVOInputAccessoryBar.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,11 +337,19 @@
 				CD8A7E541CF799CF00D7DC01 /* DVOMainMenuTableViewController.swift in Sources */,
 				CD8A7E5B1CF7AC3F00D7DC01 /* DVOSelectVideoTableViewController.swift in Sources */,
 				CD8A7E791CF8B66C00D7DC01 /* VideoMetaData.swift in Sources */,
+				CD8A7E841CFF853000D7DC01 /* DVOMetaDataEntryCell.swift in Sources */,
 				CD8A7E2B1CF7988D00D7DC01 /* DanceVideoOrganizer.xcdatamodeld in Sources */,
-				CD8A7E561CF79B6700D7DC01 /* VideoAsset.swift in Sources */,
+				CD8A7E561CF79B6700D7DC01 /* DVOVideoAsset.swift in Sources */,
+				CD8A7E8A1CFF921300D7DC01 /* Dancer.swift in Sources */,
+				CD7196281D023D3500A49D11 /* DVOLocationTableViewController.swift in Sources */,
 				CD8A7E591CF79BE300D7DC01 /* DVOCoreData.swift in Sources */,
 				CD8A7E771CF8B66C00D7DC01 /* VideoAssets.swift in Sources */,
+				CD8A7E861CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift in Sources */,
+				CD7196231D02175A00A49D11 /* DVOInputAccessoryBar.swift in Sources */,
 				CD8A7E231CF7988D00D7DC01 /* AppDelegate.swift in Sources */,
+				CD71961D1D0200C600A49D11 /* DVODateFormatter.swift in Sources */,
+				CD71961F1D02172D00A49D11 /* DVOTextField.swift in Sources */,
+				CD7196251D021F8000A49D11 /* DVOMetaDataTitleViewController.swift in Sources */,
 				CD8A7E751CF8B66C00D7DC01 /* Studio.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -528,6 +580,7 @@
 				CD8A7E4C1CF7988D00D7DC01 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CD8A7E4D1CF7988D00D7DC01 /* Build configuration list for PBXNativeTarget "DanceVideoOrganizerTests" */ = {
 			isa = XCConfigurationList;
@@ -536,6 +589,7 @@
 				CD8A7E4F1CF7988D00D7DC01 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CD8A7E501CF7988D00D7DC01 /* Build configuration list for PBXNativeTarget "DanceVideoOrganizerUITests" */ = {
 			isa = XCConfigurationList;
@@ -544,6 +598,7 @@
 				CD8A7E521CF7988D00D7DC01 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

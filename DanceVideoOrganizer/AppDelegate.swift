@@ -48,19 +48,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func populateStudioData() {
-        let fetchRequest = NSFetchRequest()
         
-
-        let locationEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-        fetchRequest.entity = locationEntity
-        
-        fetchRequest.fetchBatchSize = 0
-        
-        let sortDescriptor = NSSortDescriptor(key: StudioAttributes.locationKey, ascending: false)
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+        let fetchedResultsController = DVOCoreData.fetchStudios()
         
         do {
             try fetchedResultsController.performFetch()
@@ -68,16 +57,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 for studio in studios {
                     if let key = studio.valueForKey("locationKey") as? String {
                         switch key {
-                        case "4744.0:4744.0":
+                        case "4744.0:-12229.0":
                             studio.name = "Sea To Sky"
-                        case "4562.0:4562.0":
+                        case "4562.0:-12267.0":
                             studio.name = "Bridge Town"
                         case "4542.0:-12279.0":
                             studio.name = "Uptown Ballroom"
-                        case "4540.0:4540.0":
+                            let dancerEntity = NSEntityDescription.entityForName(Dancer.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+                            let newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+                            newDancer.name = "Leilani Nakagawa"
+                            newDancer.defaultStudio = studio
+                            newDancer.studio = [studio]
+                            studio.defaultInstructor = newDancer
+                            studio.instructors = [newDancer]
+                        case "4540.0:-12275.0":
                             studio.name = "Old Uptown Ballroom"
-                        case "4557.0:4557.0":
+                        case "4557.0:-12258.0":
                             studio.name = "Rose City Swing"
+                        case "4552.0:-12266.0":
+                            studio.name = "Norse Hall"
+                        case "4543.0:-12277.0":
+                            studio.name = "Ballroom Dance Company"
+                        case "4543.0:-12253.0":
+                            studio.name = "Clackamas Grange"
+                        case "4553.0:-12292.0":
+                            studio.name = "Home"
                             
                         default: break
                         }
@@ -112,16 +116,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             try fetchedResultsController.performFetch()
             if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
-
-            for studio in studios {
-                if let key = studio.locationKey, let address = studio.address {
-                    if DVOCoreData.foundAddresses[key] == nil {
-                        DVOCoreData.foundAddresses[key] = address
-                    } else {
-                        DVOCoreData.sharedObject.managedObjectContext.deleteObject(studio)
+                
+                for studio in studios {
+                    if let key = studio.locationKey, let address = studio.address {
+                        if DVOCoreData.foundAddresses[key] == nil {
+                            DVOCoreData.foundAddresses[key] = address
+                        } else {
+                            DVOCoreData.sharedObject.managedObjectContext.deleteObject(studio)
+                        }
                     }
                 }
-            }
             }
             
         } catch {
@@ -139,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let vidoes = videoAssetFetchResultsController.fetchedObjects as? [VideoAssets] {
                 for video in vidoes  {
                     if let key = video.localIdentifier {
-                        if localKeys[key] == nil {
+                        if localKeys[key] == nil  {
                             localKeys[key] = true
                         }
                     }
@@ -156,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         allVideos.enumerateObjectsUsingBlock() { (asset, index, done) in
             if let thisAsset = asset as? PHAsset {
-                if localKeys[thisAsset.localIdentifier] == nil {
+                if localKeys[thisAsset.localIdentifier] == nil  {
                     let newVideoAsset = VideoAssets(entity: videoAssetEntity, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
                     newVideoAsset.localIdentifier = thisAsset.localIdentifier
                     if let thisLocation = thisAsset.location {
@@ -172,8 +176,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         if let address = addressDictionary["FormattedAddressLines"] as? [String] {
                                             DVOCoreData.foundAddresses["locationKey"] = "\(address[0]), \(address[1])"
                                             newVideoAsset.address = "\(address[0]), \(address[1])"
-                                            print(locationKey)
-                                            print("\(address[0]), \(address[1])")
                                             let newStudio = Studio(entity: locationEntity, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
                                             newStudio.address = "\(address[0]), \(address[1])"
                                             newStudio.locationKey = locationKey

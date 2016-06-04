@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
+    <entity name="Dancer" representedClassName=".Dancer" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="primaryRole" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="defaultStudio" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Studio" inverseName="defaultInstructor" inverseEntity="Studio" syncable="YES"/>
+        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="instructors" inverseEntity="VideoMetaData" syncable="YES"/>
+        <relationship name="studio" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Studio" inverseName="instructors" inverseEntity="Studio" syncable="YES"/>
+    </entity>
     <entity name="Studio" representedClassName=".Studio" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationKey" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="defaultInstructor" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Dancer" inverseName="defaultStudio" inverseEntity="Dancer" syncable="YES"/>
+        <relationship name="instructors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Dancer" inverseName="studio" inverseEntity="Dancer" syncable="YES"/>
         <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="studio" inverseEntity="VideoMetaData" syncable="YES"/>
+        <compoundIndexes>
+            <compoundIndex>
+                <index value="locationKey"/>
+                <index value="name"/>
+            </compoundIndex>
+        </compoundIndexes>
     </entity>
     <entity name="VideoAssets" representedClassName=".VideoAssets" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
@@ -23,11 +38,13 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="asset" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoAssets" inverseName="metaData" inverseEntity="VideoAssets" syncable="YES"/>
+        <relationship name="instructors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Dancer" inverseName="metaData" inverseEntity="Dancer" syncable="YES"/>
         <relationship name="studio" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Studio" inverseName="metaData" inverseEntity="Studio" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Dancer" positionX="135" positionY="27" width="128" height="120"/>
+        <element name="Studio" positionX="-9" positionY="34" width="128" height="133"/>
         <element name="VideoAssets" positionX="-11" positionY="-144" width="128" height="146"/>
-        <element name="Studio" positionX="-9" positionY="34" width="128" height="103"/>
-        <element name="VideoMetaData" positionX="187" positionY="-135" width="128" height="118"/>
+        <element name="VideoMetaData" positionX="187" positionY="-135" width="128" height="165"/>
     </elements>
 </model>
