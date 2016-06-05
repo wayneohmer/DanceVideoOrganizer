@@ -1,35 +1,33 @@
 //
-//  DVOLocationTableViewController.swift
+//  DVODancerTableViewController.swift
 //  DanceVideoOrganizer
 //
-//  Created by Wayne Ohmer on 6/3/16.
+//  Created by Wayne Ohmer on 6/5/16.
 //  Copyright © 2016 Wayne Ohmer. All rights reserved.
 //
 
 import UIKit
 
-class DVOLocationTableViewController: UITableViewController, UISearchResultsUpdating {
-    
+class DVODancerTableViewController: UITableViewController, UISearchResultsUpdating {
+
     var metaData:VideoMetaData!
-    var studioArray = [Studio]()
-    var filteredArray = [Studio]()
+    var nameArray = [Dancer]()
+    var filteredArray = [Dancer]()
     var selectedName = ""
-    var selectedStudio:Studio?
+    var selectedDancer:Dancer?
     let searchController = UISearchController(searchResultsController: nil)
 
-    @IBOutlet weak var searchBar: UISearchBar!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let studioFetchController = DVOCoreData.fetchStudios()
+        let dancerFetchController = DVOCoreData.fetchDancers()
         do {
-            try studioFetchController.performFetch()
-            if let studios = studioFetchController.fetchedObjects as? [Studio] {
-                for studio in studios {
-                    if studio.name != nil && studio.name != "" {
-                        self.studioArray.append(studio)
-                        if let selectedName = self.selectedStudio?.name {
-                            if studio.name == selectedName {
+            try dancerFetchController.performFetch()
+            if let objects = dancerFetchController.fetchedObjects as? [Dancer] {
+                for data in objects {
+                    if data.name != nil && data.name != "" {
+                        self.nameArray.append(data)
+                        if let selectedName = self.selectedDancer?.name {
+                            if data.name == selectedName {
                                 self.selectedName = selectedName
                             }
                         }
@@ -43,7 +41,13 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
         self.searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         self.tableView.tableHeaderView = searchController.searchBar
-        self.filteredArray = self.studioArray
+        self.filteredArray = self.nameArray
+
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,11 +57,12 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
 
     func filterContentForSearchText(searchText: String, scope: String = "All") {
         if searchText != "" {
-            self.filteredArray = studioArray.filter { studio in
+            self.filteredArray = self.nameArray.filter { studio in
+                
                 return studio.name!.lowercaseString.containsString(searchText.lowercaseString)
             }
         } else {
-            self.filteredArray = self.studioArray
+            self.filteredArray = self.nameArray
         }
         tableView.reloadData()
     }
@@ -65,7 +70,7 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         self.filterContentForSearchText(searchController.searchBar.text!)
     }
-    
+
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -75,12 +80,10 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filteredArray.count
     }
-
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         cell.textLabel?.text = self.filteredArray[indexPath.item].name
-        if selectedStudio != nil && self.selectedName == cell.textLabel?.text {
+        if selectedDancer != nil && self.selectedName == cell.textLabel?.text {
             cell.accessoryType = .Checkmark
         }
         return cell
@@ -90,10 +93,21 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
         let cell = self.tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = .Checkmark
         self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        self.metaData.studio = self.filteredArray[indexPath.item]
+        self.metaData.instructors = [self.filteredArray[indexPath.item]]
         self.navigationController?.popViewControllerAnimated(true)
-       
+        
     }
+
+    /*
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+
+        // Configure the cell...
+
+        return cell
+    }
+    */
+
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

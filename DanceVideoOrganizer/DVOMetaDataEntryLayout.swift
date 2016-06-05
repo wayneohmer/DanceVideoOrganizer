@@ -22,7 +22,6 @@ class DVOMetaDataEntryLayout: NSObject {
     let cellOrder = [VideoMetaDataAttributes.title,VideoMetaDataAttributes.location,VideoMetaDataAttributes.instructors,VideoAssetsAttributes.createdDate]
     var metaData = VideoMetaData(entity: NSEntityDescription.entityForName(VideoMetaData.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
     let mainStoryboard = UIStoryboard(name:"Main", bundle: nil)
-    var currentStudio:Studio? = nil
 
     convenience init(videoAsset: DVOVideoAsset) {
         self.init()
@@ -41,7 +40,6 @@ class DVOMetaDataEntryLayout: NSObject {
             if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
                 for studio in studios {
                     instructorName = studio.defaultInstructor?.name ?? ""
-                    self.currentStudio = studio
                     self.metaData.studio = studio
                 }
             }
@@ -49,8 +47,8 @@ class DVOMetaDataEntryLayout: NSObject {
             
         }
         self.cellDict = [VideoMetaDataAttributes.title:CellData(description: "Title:", data: self.metaData.title ?? "", visible: true, destination: self.handleTitle),
-                         VideoMetaDataAttributes.location:CellData(description: "Location:", data: self.currentStudio?.name ?? "", visible: true, destination: self.handleLocation),
-                         VideoMetaDataAttributes.instructors:CellData(description: "Instructor(s):", data: instructorName, visible: true, destination: nil),
+                         VideoMetaDataAttributes.location:CellData(description: "Location:", data: self.metaData.studio?.name ?? "", visible: true, destination: self.handleLocation),
+                         VideoMetaDataAttributes.instructors:CellData(description: "Instructor(s):", data: instructorName, visible: true, destination: self.handleInstructor),
                          VideoAssetsAttributes.createdDate:CellData(description: "Date:", data: DVODateFormatter.formattedDate(videoAsset.creationDate), visible: true, destination: nil)]
         }
     
@@ -63,7 +61,14 @@ class DVOMetaDataEntryLayout: NSObject {
     func handleLocation(navController: UINavigationController?) {
         let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVOLocationTableViewController") as! DVOLocationTableViewController
         vc.metaData = self.metaData
-        vc.selectedStudio = self.currentStudio
+        vc.selectedStudio = self.metaData.studio!
+        navController?.pushViewController(vc, animated: true)
+    }
+    
+    func handleInstructor(navController: UINavigationController?) {
+        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVODancerTableViewController") as! DVODancerTableViewController
+        vc.metaData = self.metaData
+        vc.selectedDancer = self.metaData.studio?.defaultInstructor
         navController?.pushViewController(vc, animated: true)
     }
     

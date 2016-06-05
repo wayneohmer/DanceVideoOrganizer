@@ -3,7 +3,7 @@
     <entity name="Dancer" representedClassName=".Dancer" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="primaryRole" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="defaultStudio" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Studio" inverseName="defaultInstructor" inverseEntity="Studio" syncable="YES"/>
+        <relationship name="defaultStudio" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Studio" inverseName="defaultInstructor" inverseEntity="Studio" syncable="YES"/>
         <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="instructors" inverseEntity="VideoMetaData" syncable="YES"/>
         <relationship name="studio" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Studio" inverseName="instructors" inverseEntity="Studio" syncable="YES"/>
     </entity>
@@ -42,7 +42,7 @@
         <relationship name="studio" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Studio" inverseName="metaData" inverseEntity="Studio" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Dancer" positionX="135" positionY="27" width="128" height="120"/>
+        <element name="Dancer" positionX="135" positionY="27" width="128" height="30"/>
         <element name="Studio" positionX="-9" positionY="34" width="128" height="133"/>
         <element name="VideoAssets" positionX="-11" positionY="-144" width="128" height="146"/>
         <element name="VideoMetaData" positionX="187" positionY="-135" width="128" height="165"/>

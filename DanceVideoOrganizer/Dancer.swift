@@ -9,6 +9,13 @@
 import Foundation
 import CoreData
 
+public struct DancerAttributes {
+    static let name = "name"
+    static let primaryRole = "primaryRole"
+    static let leader = "leader"
+    static let studio = "studio"
+    static let defaultStudio = "defaultStudio"
+}
 
 class Dancer: NSManagedObject {
     
@@ -16,7 +23,7 @@ class Dancer: NSManagedObject {
     @NSManaged var name: String?
     @NSManaged var primaryRole: String?
     @NSManaged var studio: NSSet?
-    @NSManaged var defaultStudio: Studio?
+    @NSManaged var defaultStudio: NSSet?
 
 
 }

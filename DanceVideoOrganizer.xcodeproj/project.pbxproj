@@ -31,6 +31,7 @@
 		CD8A7E841CFF853000D7DC01 /* DVOMetaDataEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E831CFF853000D7DC01 /* DVOMetaDataEntryCell.swift */; };
 		CD8A7E861CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E851CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift */; };
 		CD8A7E8A1CFF921300D7DC01 /* Dancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8A7E881CFF921300D7DC01 /* Dancer.swift */; };
+		CD9A510B1D04C0FD00BD6E06 /* DVODancerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD9A510A1D04C0FD00BD6E06 /* DVODancerTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		CD8A7E831CFF853000D7DC01 /* DVOMetaDataEntryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOMetaDataEntryCell.swift; sourceTree = "<group>"; };
 		CD8A7E851CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOMetaDataEntryLayout.swift; sourceTree = "<group>"; };
 		CD8A7E881CFF921300D7DC01 /* Dancer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dancer.swift; sourceTree = "<group>"; };
+		CD9A510A1D04C0FD00BD6E06 /* DVODancerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVODancerTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +198,7 @@
 				CD7196241D021F8000A49D11 /* DVOMetaDataTitleViewController.swift */,
 				CD8A7E831CFF853000D7DC01 /* DVOMetaDataEntryCell.swift */,
 				CD7196271D023D3500A49D11 /* DVOLocationTableViewController.swift */,
+				CD9A510A1D04C0FD00BD6E06 /* DVODancerTableViewController.swift */,
 			);
 			name = "MetaData Entry";
 			sourceTree = "<group>";
@@ -350,6 +353,7 @@
 				CD71961D1D0200C600A49D11 /* DVODateFormatter.swift in Sources */,
 				CD71961F1D02172D00A49D11 /* DVOTextField.swift in Sources */,
 				CD7196251D021F8000A49D11 /* DVOMetaDataTitleViewController.swift in Sources */,
+				CD9A510B1D04C0FD00BD6E06 /* DVODancerTableViewController.swift in Sources */,
 				CD8A7E751CF8B66C00D7DC01 /* Studio.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

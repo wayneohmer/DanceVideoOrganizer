@@ -15,10 +15,14 @@ import Photos
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var persistentStoreCoordinator = DVOCoreData().persistentStoreCoordinator
+    
+    var dancerDict = [String:Dancer]()
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         self.populateLocalVideoData()
+        self.populateDancers()
         self.populateStudioData()
         return true
     }
@@ -47,90 +51,143 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DVOCoreData.sharedObject.saveContext()
     }
     
-    func populateStudioData() {
-        
-        let fetchedResultsController = DVOCoreData.fetchStudios()
+    func populateDancers() {
+        let fetchRequest = NSFetchRequest(entityName: Dancer.entityName)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
         do {
-            try fetchedResultsController.performFetch()
-            if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
-                for studio in studios {
-                    if let key = studio.valueForKey("locationKey") as? String {
-                        switch key {
-                        case "4744.0:-12229.0":
-                            studio.name = "Sea To Sky"
-                        case "4562.0:-12267.0":
-                            studio.name = "Bridge Town"
-                        case "4542.0:-12279.0":
-                            studio.name = "Uptown Ballroom"
-                            let dancerEntity = NSEntityDescription.entityForName(Dancer.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-                            let newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-                            newDancer.name = "Leilani Nakagawa"
-                            newDancer.defaultStudio = studio
-                            newDancer.studio = [studio]
-                            studio.defaultInstructor = newDancer
-                            studio.instructors = [newDancer]
-                        case "4540.0:-12275.0":
-                            studio.name = "Old Uptown Ballroom"
-                        case "4557.0:-12258.0":
-                            studio.name = "Rose City Swing"
-                        case "4552.0:-12266.0":
-                            studio.name = "Norse Hall"
-                        case "4543.0:-12277.0":
-                            studio.name = "Ballroom Dance Company"
-                        case "4543.0:-12253.0":
-                            studio.name = "Clackamas Grange"
-                        case "4553.0:-12292.0":
-                            studio.name = "Home"
-                            
-                        default: break
-                        }
-                    }
-                }
-            }
-            do {
-                try DVOCoreData.sharedObject.managedObjectContext.save()
-            } catch {
-                print ("could not save found address")
-            }
-        } catch {
-            abort()
+            try self.persistentStoreCoordinator.executeRequest(deleteRequest, withContext: DVOCoreData.sharedObject.managedObjectContext)
+        } catch let error as NSError {
+            print(error)
         }
+        let dancerEntity = NSEntityDescription.entityForName(Dancer.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
 
+        var newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Leilani Nakagawa"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Ariel Caplan"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Joe Broderick"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Marcus Sterling"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Trina Siebert"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Jon Jackson"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Cassie Winter"
+        self.dancerDict[newDancer.name!] = newDancer
+
+//        do {
+//            try DVOCoreData.sharedObject.managedObjectContext.save()
+//        } catch {
+//            print ("could not save found dancers")
+//        }
+
+    }
+    
+    func populateStudioData() {
+        
+        let fetchRequest = NSFetchRequest(entityName: Studio.entityName)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try self.persistentStoreCoordinator.executeRequest(deleteRequest, withContext: DVOCoreData.sharedObject.managedObjectContext)
+        } catch let error as NSError {
+            print(error)
+        }
+        let studioEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        
+        var studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Sea To Sky"
+        studio.locationKey = "4744.0:-12229.0"
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Bridge Town"
+        studio.locationKey = "4562.0:-12267.0"
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Uptown Ballroom"
+        studio.locationKey = "4542.0:-12279.0"
+        
+        studio.defaultInstructor = self.dancerDict["Leilani Nakagawa"]
+        studio.instructors = [self.dancerDict["Leilani Nakagawa"]!,self.dancerDict["Joe Broderick"]!,self.dancerDict["Ariel Caplan"]!]
+
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Old Uptown Ballroom"
+        studio.locationKey = "4540.0:-12275.0"
+        studio.defaultInstructor = self.dancerDict["Leilani Nakagawa"]
+        studio.instructors = [self.dancerDict["Leilani Nakagawa"]!,self.dancerDict["Joe Broderick"]!,self.dancerDict["Ariel Caplan"]!]
+
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Rose City Swing"
+        studio.locationKey = "4557.0:-12258.0"
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Norse Hall"
+        studio.locationKey = "4552.0:-12266.0"
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Ballroom Dance Company"
+        studio.locationKey = "4543.0:-12277.0"
+        studio.defaultInstructor = self.dancerDict["Marcus Sterling"]
+        studio.instructors = [self.dancerDict["Marcus Sterling"]!,self.dancerDict["Trina Siebert"]!]
+
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Clackamas Grange"
+        studio.locationKey = "4543.0:-12253.0"
+        
+        studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        studio.name = "Home"
+        studio.locationKey = "4553.0:-12292.0"
+        do {
+            try DVOCoreData.sharedObject.managedObjectContext.save()
+        } catch {
+            print ("could not save found studios")
+        }
     }
 
     func populateLocalVideoData() {
         
-        let fetchRequest = NSFetchRequest()
-        guard let locationEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext) else { return }
-        fetchRequest.entity = locationEntity
-        
-        fetchRequest.fetchBatchSize = 0
-        
-        let sortDescriptor = NSSortDescriptor(key:  StudioAttributes.locationKey, ascending: false)
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
-        
-        do {
-            try fetchedResultsController.performFetch()
-            if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
-                
-                for studio in studios {
-                    if let key = studio.locationKey, let address = studio.address {
-                        if DVOCoreData.foundAddresses[key] == nil {
-                            DVOCoreData.foundAddresses[key] = address
-                        } else {
-                            DVOCoreData.sharedObject.managedObjectContext.deleteObject(studio)
-                        }
-                    }
-                }
-            }
-            
-        } catch {
-            abort()
-        }
+//        let fetchRequest = NSFetchRequest()
+//        guard let locationEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext) else { return }
+//        fetchRequest.entity = locationEntity
+//        
+//        fetchRequest.fetchBatchSize = 0
+//        
+//        let sortDescriptor = NSSortDescriptor(key:  StudioAttributes.locationKey, ascending: false)
+//        
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//        
+//        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+//        
+//        do {
+//            try fetchedResultsController.performFetch()
+//            if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
+//                
+//                for studio in studios {
+//                    if let key = studio.locationKey, let address = studio.address {
+//                        if DVOCoreData.foundAddresses[key] == nil {
+//                            DVOCoreData.foundAddresses[key] = address
+//                        } else {
+//                            DVOCoreData.sharedObject.managedObjectContext.deleteObject(studio)
+//                        }
+//                    }
+//                }
+//            }
+//            
+//        } catch {
+//            abort()
+//        }
         guard let videoAssetEntity = NSEntityDescription.entityForName(VideoAssets.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext) else { return }
         
         let videoAssetFetch = NSFetchRequest()
@@ -176,9 +233,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         if let address = addressDictionary["FormattedAddressLines"] as? [String] {
                                             DVOCoreData.foundAddresses["locationKey"] = "\(address[0]), \(address[1])"
                                             newVideoAsset.address = "\(address[0]), \(address[1])"
-                                            let newStudio = Studio(entity: locationEntity, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-                                            newStudio.address = "\(address[0]), \(address[1])"
-                                            newStudio.locationKey = locationKey
+                                            //newStudio.address = "\(address[0]), \(address[1])"
+                                            //newStudio.locationKey = locationKey
                                             do {
                                                 try DVOCoreData.sharedObject.managedObjectContext.save()
                                             } catch {

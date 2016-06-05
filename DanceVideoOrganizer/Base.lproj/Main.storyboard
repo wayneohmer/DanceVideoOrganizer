@@ -281,6 +281,34 @@
             </objects>
             <point key="canvasLocation" x="2813" y="571"/>
         </scene>
+        <!--Dancer Table View Controller-->
+        <scene sceneID="iAY-Wl-tHj">
+            <objects>
+                <tableViewController storyboardIdentifier="DVODancerTableViewController" id="EMV-Y2-QtX" customClass="DVODancerTableViewController" customModule="DanceVideoOrganizer" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="EJz-6A-kyP">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="grf-Hz-ur4">
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="grf-Hz-ur4" id="9AR-2O-mLo">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="EMV-Y2-QtX" id="pr2-Vm-AFp"/>
+                            <outlet property="delegate" destination="EMV-Y2-QtX" id="tbR-JE-NCy"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AEF-ZL-0WI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2814" y="1231"/>
+        </scene>
         <!--Meta Data Title View Controller-->
         <scene sceneID="EUi-Qz-yhH">
             <objects>

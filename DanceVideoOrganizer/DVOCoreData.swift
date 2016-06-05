@@ -79,12 +79,24 @@ class DVOCoreData: NSObject {
     class func fetchStudios() -> NSFetchedResultsController {
 
         let fetchRequest = NSFetchRequest()
-        let locationEntity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
-        fetchRequest.entity = locationEntity
+        let entity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
         fetchRequest.fetchBatchSize = 0
-        let sortDescriptor = NSSortDescriptor(key: StudioAttributes.locationKey, ascending: false)
+        let sortDescriptor = NSSortDescriptor(key: StudioAttributes.locationKey, ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
 
+    }
+    
+    class func fetchDancers() -> NSFetchedResultsController {
+        
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName(Dancer.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: DancerAttributes.name, ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+        
     }
 }
