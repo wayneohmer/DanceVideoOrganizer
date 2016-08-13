@@ -13,8 +13,8 @@ import Photos
 class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITableViewDelegate {
 
     var videoAsset = DVOVideoAsset()
-    var cellArray:[DVOMetaDataEntryLayout.CellData]!
-    var layout:DVOMetaDataEntryLayout!
+    var cellArray: [DVOMetaDataEntryLayout.CellData]!
+    var layout: DVOMetaDataEntryLayout!
     @IBOutlet weak var layoutTableView: UITableView!
     @IBOutlet weak var thumbNailImageView: UIImageView!
     
@@ -22,10 +22,29 @@ class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITabl
         super.viewDidLoad()
         self.thumbNailImageView.image = self.videoAsset.thumbNail
         self.layout = DVOMetaDataEntryLayout(videoAsset: self.videoAsset)
-        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(saveTouched))
+       
+
     }
     
     override func viewWillAppear(animated: Bool) {
+        self.cellArray = self.layout.updateCells()
+        self.layoutTableView.reloadData()
+    }
+    
+    func saveTouched() {
+        
+        do {
+            try DVOCoreData.sharedObject.managedObjectContext.save()
+        } catch {
+            print ("could not save metaData")
+        }
+        self.navigationController?.popToRootViewControllerAnimated(true)
+    }
+    
+        
+    @IBAction func typeChanged(sender: UISegmentedControl) {
+        self.layout.handleTypeChange(sender.selectedSegmentIndex)
         self.cellArray = self.layout.updateCells()
         self.layoutTableView.reloadData()
     }
@@ -35,9 +54,9 @@ class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITabl
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let controller = segue.destinationViewController as! AVPlayerViewController
-        controller.player =  AVPlayer(playerItem: AVPlayerItem(asset: self.videoAsset.videoAsset!))
-        controller.player?.play()
+        let controller = segue.destinationViewController as! DVOVideoPlayerViewController
+        controller.videoAsset = self.videoAsset.videoAsset!
+        
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -52,6 +71,7 @@ class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITabl
         let cell = tableView.dequeueReusableCellWithIdentifier("DVOMetaDataEntryCell", forIndexPath: indexPath) as! DVOMetaDataEntryCell
         cell.descriptionLabel.text = self.cellArray[indexPath.item].description
         cell.dataLabel.text = self.cellArray[indexPath.item].data
+        cell.hidden = !self.cellArray[indexPath.item].visible
         return cell
     }
     

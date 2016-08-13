@@ -12,9 +12,9 @@ import CoreData
 public struct DancerAttributes {
     static let name = "name"
     static let primaryRole = "primaryRole"
-    static let leader = "leader"
     static let studio = "studio"
     static let defaultStudio = "defaultStudio"
+    static let metaData = "metaData"
 }
 
 class Dancer: NSManagedObject {
@@ -24,6 +24,6 @@ class Dancer: NSManagedObject {
     @NSManaged var primaryRole: String?
     @NSManaged var studio: NSSet?
     @NSManaged var defaultStudio: NSSet?
-
+    @NSManaged var metaData: Set<VideoMetaData>?
 
 }

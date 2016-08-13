@@ -18,14 +18,18 @@ public struct StudioAttributes {
     static let defaultInstructor = "defaultInstructor"
 }
 
-public class Studio: NSManagedObject {
+public class Studio: NSManagedObject, SearchableName {
 
     static let entityName = "Studio"
     @NSManaged var address: String?
     @NSManaged var name: String?
     @NSManaged var locationKey: String?
-    @NSManaged var metaData: VideoMetaData?
+    @NSManaged var metaData: Set<VideoMetaData>?
     @NSManaged var instructors: NSSet?
     @NSManaged var defaultInstructor: Dancer?
+    
+    var searchableName: String { 
+        return self.name ?? ""
+    }
 
 }

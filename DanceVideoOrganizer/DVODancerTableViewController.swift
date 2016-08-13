@@ -10,11 +10,10 @@ import UIKit
 
 class DVODancerTableViewController: UITableViewController, UISearchResultsUpdating {
 
-    var metaData:VideoMetaData!
+    var metaData: VideoMetaData!
     var nameArray = [Dancer]()
     var filteredArray = [Dancer]()
-    var selectedName = ""
-    var selectedDancer:Dancer?
+    var selectedDancers: [String:Dancer]?
     let searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
@@ -26,11 +25,6 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
                 for data in objects {
                     if data.name != nil && data.name != "" {
                         self.nameArray.append(data)
-                        if let selectedName = self.selectedDancer?.name {
-                            if data.name == selectedName {
-                                self.selectedName = selectedName
-                            }
-                        }
                     }
                 }
             }
@@ -47,7 +41,7 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(saveTouched))
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,6 +49,17 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
         // Dispose of any resources that can be recreated.
     }
 
+    func saveTouched() {
+        if let dancers = self.selectedDancers {
+            self.metaData.instructors?.removeAll()
+            for (_,dancer) in dancers {
+                // this should be insert(dancer) but it gives nonsensical error.
+                self.metaData.instructors = self.metaData.instructors?.union(Set([dancer]))
+            }
+        }
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
     func filterContentForSearchText(searchText: String, scope: String = "All") {
         if searchText != "" {
             self.filteredArray = self.nameArray.filter { studio in
@@ -83,7 +88,7 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
         cell.textLabel?.text = self.filteredArray[indexPath.item].name
-        if selectedDancer != nil && self.selectedName == cell.textLabel?.text {
+        if selectedDancers?[self.filteredArray[indexPath.item].name!] != nil {
             cell.accessoryType = .Checkmark
         }
         return cell
@@ -93,8 +98,12 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
         let cell = self.tableView.cellForRowAtIndexPath(indexPath)
         cell?.accessoryType = .Checkmark
         self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        self.metaData.instructors = [self.filteredArray[indexPath.item]]
-        self.navigationController?.popViewControllerAnimated(true)
+        if self.selectedDancers![self.filteredArray[indexPath.item].name!] == nil {
+            self.selectedDancers![self.filteredArray[indexPath.item].name!] = self.filteredArray[indexPath.item]
+        } else {
+            self.selectedDancers![self.filteredArray[indexPath.item].name!] = nil
+            self.tableView.reloadData()
+        }
         
     }
 

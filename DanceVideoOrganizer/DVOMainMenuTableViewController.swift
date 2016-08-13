@@ -20,8 +20,8 @@ class DVOMainMenuTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let menuItem = MenuItem(title: "Browse All", storyboardId: "DVOSelectVideoTableViewController")
-        self.menu.append(menuItem)
+        self.menu.append(MenuItem(title: "Browse Local Videos", storyboardId: "DVOSelectVideoTableViewController"))
+        self.menu.append(MenuItem(title: "Browse MetaData", storyboardId: "DVOMetaDataTableViewController"))
 
     }
 

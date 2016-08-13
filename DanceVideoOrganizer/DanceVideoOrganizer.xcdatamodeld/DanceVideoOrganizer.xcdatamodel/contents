@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
+    <entity name="CompLevel" representedClassName=".CompLevel" syncable="YES">
+        <attribute name="levelDesc" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="compLevel" inverseEntity="VideoMetaData" syncable="YES"/>
+    </entity>
+    <entity name="CompRound" representedClassName=".CompRound" syncable="YES">
+        <attribute name="roundDesc" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="compRound" inverseEntity="VideoMetaData" syncable="YES"/>
+    </entity>
+    <entity name="CompType" representedClassName=".CompType" syncable="YES">
+        <attribute name="typeDesc" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="compType" inverseEntity="VideoMetaData" syncable="YES"/>
+    </entity>
     <entity name="Dancer" representedClassName=".Dancer" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="primaryRole" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="defaultStudio" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Studio" inverseName="defaultInstructor" inverseEntity="Studio" syncable="YES"/>
-        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="instructors" inverseEntity="VideoMetaData" syncable="YES"/>
-        <relationship name="studio" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Studio" inverseName="instructors" inverseEntity="Studio" syncable="YES"/>
+        <relationship name="events" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="instructors" inverseEntity="Event" syncable="YES"/>
+        <relationship name="metaData" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="instructors" inverseEntity="VideoMetaData" syncable="YES"/>
+        <relationship name="studios" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Studio" inverseName="instructors" inverseEntity="Studio" syncable="YES"/>
+    </entity>
+    <entity name="Event" representedClassName=".Event" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="locationKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="instructors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Dancer" inverseName="events" inverseEntity="Dancer" syncable="YES"/>
+        <relationship name="metaData" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="event" inverseEntity="VideoMetaData" syncable="YES"/>
     </entity>
     <entity name="Studio" representedClassName=".Studio" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationKey" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="defaultInstructor" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Dancer" inverseName="defaultStudio" inverseEntity="Dancer" syncable="YES"/>
-        <relationship name="instructors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Dancer" inverseName="studio" inverseEntity="Dancer" syncable="YES"/>
-        <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="studio" inverseEntity="VideoMetaData" syncable="YES"/>
+        <relationship name="instructors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Dancer" inverseName="studios" inverseEntity="Dancer" syncable="YES"/>
+        <relationship name="metaData" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="studio" inverseEntity="VideoMetaData" syncable="YES"/>
         <compoundIndexes>
             <compoundIndex>
                 <index value="locationKey"/>
@@ -27,24 +49,37 @@
         <attribute name="localIdentifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationKey" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="metaData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoMetaData" inverseName="asset" inverseEntity="VideoMetaData" syncable="YES"/>
+        <fetchedProperty name="event" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Event" predicateString=" locationKey == $FETCH_SOURCE.locationKey"/>
+        </fetchedProperty>
+        <fetchedProperty name="possibleEvent" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Event" predicateString="$FETCH_SOURCE.createdDate &gt; startDate &amp;&amp; $FETCH_SOURCE.createdDate &lt; endDate "/>
+        </fetchedProperty>
         <fetchedProperty name="studio" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Studio" predicateString=" locationKey == $FETCH_SOURCE.locationKey"/>
         </fetchedProperty>
     </entity>
     <entity name="VideoMetaData" representedClassName=".VideoMetaData" syncable="YES">
-        <attribute name="follower" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="leader" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="soneNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="asset" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VideoAssets" inverseName="metaData" inverseEntity="VideoAssets" syncable="YES"/>
+        <relationship name="compLevel" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CompLevel" inverseName="metaData" inverseEntity="CompLevel" syncable="YES"/>
+        <relationship name="compRound" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompRound" inverseName="metaData" inverseEntity="CompRound" syncable="YES"/>
+        <relationship name="compType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompType" inverseName="metaData" inverseEntity="CompType" syncable="YES"/>
+        <relationship name="event" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="metaData" inverseEntity="Event" syncable="YES"/>
         <relationship name="instructors" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Dancer" inverseName="metaData" inverseEntity="Dancer" syncable="YES"/>
         <relationship name="studio" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Studio" inverseName="metaData" inverseEntity="Studio" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Dancer" positionX="135" positionY="27" width="128" height="30"/>
-        <element name="Studio" positionX="-9" positionY="34" width="128" height="133"/>
-        <element name="VideoAssets" positionX="-11" positionY="-144" width="128" height="146"/>
-        <element name="VideoMetaData" positionX="187" positionY="-135" width="128" height="165"/>
+        <element name="Dancer" positionX="135" positionY="27" width="128" height="135"/>
+        <element name="Event" positionX="90" positionY="0" width="128" height="30"/>
+        <element name="Studio" positionX="-9" positionY="34" width="128" height="135"/>
+        <element name="VideoAssets" positionX="-11" positionY="-144" width="128" height="179"/>
+        <element name="VideoMetaData" positionX="187" positionY="-135" width="128" height="30"/>
+        <element name="CompRound" positionX="90" positionY="0" width="128" height="30"/>
+        <element name="CompType" positionX="99" positionY="18" width="128" height="30"/>
+        <element name="CompLevel" positionX="108" positionY="27" width="128" height="30"/>
     </elements>
 </model>

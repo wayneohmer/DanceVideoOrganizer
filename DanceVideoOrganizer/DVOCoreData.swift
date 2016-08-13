@@ -76,18 +76,91 @@ class DVOCoreData: NSObject {
         }
     }
 
-    class func fetchStudios() -> NSFetchedResultsController {
-
+    class func fetchStudios(predicate: NSPredicate? = nil) -> NSFetchedResultsController {
+        
         let fetchRequest = NSFetchRequest()
         let entity = NSEntityDescription.entityForName(Studio.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
         fetchRequest.entity = entity
         fetchRequest.fetchBatchSize = 0
         let sortDescriptor = NSSortDescriptor(key: StudioAttributes.locationKey, ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
+        if predicate != nil {
+            fetchRequest.predicate = predicate
+        }
         return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
-
+        
     }
     
+    class func fetchEvents(predicate: NSPredicate? = nil) -> NSFetchedResultsController {
+        
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName(Event.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: EventAttributes.locationKey, ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        if predicate != nil {
+            fetchRequest.predicate = predicate
+        }
+        return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+        
+    }
+    
+    class func fetchMetaData(predicate: NSPredicate? = nil) -> NSFetchedResultsController {
+        
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName(VideoMetaData.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: VideoMetaDataAttributes.date, ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        if predicate != nil {
+            fetchRequest.predicate = predicate
+        }
+        return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+    }
+    class func fetchCompLevels(predicate: NSPredicate? = nil) -> NSFetchedResultsController {
+        
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName(CompLevel.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: "levelDesc", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        if predicate != nil {
+            fetchRequest.predicate = predicate
+        }
+        return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+    }
+    
+    class func fetchCompTypes(predicate: NSPredicate? = nil) -> NSFetchedResultsController {
+        
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName(CompType.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: "typeDesc", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        if predicate != nil {
+            fetchRequest.predicate = predicate
+        }
+        return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+    }
+    
+    class func fetchCompRounds(predicate: NSPredicate? = nil) -> NSFetchedResultsController {
+        
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName(CompRound.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: "roundDesc", ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        if predicate != nil {
+            fetchRequest.predicate = predicate
+        }
+        return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+    }
+        
     class func fetchDancers() -> NSFetchedResultsController {
         
         let fetchRequest = NSFetchRequest()
@@ -99,4 +172,28 @@ class DVOCoreData: NSObject {
         return NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
         
     }
-}
+    
+    class func fetchVideoAssetWithIdentifier(indentifier: String) -> VideoAssets {
+        let fetchRequest = NSFetchRequest()
+        let entity = NSEntityDescription.entityForName(VideoAssets.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        fetchRequest.entity = entity
+        fetchRequest.fetchBatchSize = 0
+        let sortDescriptor = NSSortDescriptor(key: VideoAssetsAttributes.localIdentifier, ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        fetchRequest.predicate = NSPredicate(format: "localIdentifier = \"\(indentifier)\"")
+        let fetchController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: DVOCoreData.sharedObject.managedObjectContext, sectionNameKeyPath: nil, cacheName: "Master")
+        do {
+            try fetchController.performFetch()
+            if let assets = fetchController.fetchedObjects as? [VideoAssets] {
+                for asset in assets {
+                    return asset
+                }
+            }
+        } catch {
+            print("failed to fetch VideoAsset")
+        }
+        //ToDo handle error.
+        return VideoAssets()
+    }
+    
+ }

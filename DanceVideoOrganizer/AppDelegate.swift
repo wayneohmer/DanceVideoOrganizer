@@ -22,8 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         self.populateLocalVideoData()
-        self.populateDancers()
-        self.populateStudioData()
+        self.populateNew()
         return true
     }
 
@@ -49,6 +48,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         DVOCoreData.sharedObject.saveContext()
+    }
+    
+    func populateNew() {
+        self.populateComps()
+        self.populateDancers()
+        self.populateStudioData()
+    }
+    
+    func populateComps() {
+        let complevelEntity = NSEntityDescription.entityForName(CompLevel.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        var newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "New Comer"
+        newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "Novice"
+        newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "Intermediate"
+        newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "Advanced"
+        newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "All Star"
+        newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "Sophisticated"
+        newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "Masters"
+        newLevel = CompLevel(entity: complevelEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newLevel.levelDesc = "Open"
+        
+        let compTypeEntity = NSEntityDescription.entityForName(CompType.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        var newType = CompType(entity: compTypeEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newType.typeDesc = "Jack & Jill"
+        newType = CompType(entity: compTypeEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newType.typeDesc = "Strictly"
+        newType = CompType(entity: compTypeEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newType.typeDesc = "All American"
+        
+        let compRoundEntity = NSEntityDescription.entityForName(CompRound.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        var newRound = CompRound(entity: compRoundEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newRound.roundDesc = "Prelims"
+        newRound = CompRound(entity: compRoundEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newRound.roundDesc = "Semi-Finals"
+        newRound = CompRound(entity: compRoundEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newRound.roundDesc = "Quarter-Finals"
+        newRound = CompRound(entity: compRoundEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newRound.roundDesc = "Finals"
+        
     }
     
     func populateDancers() {
@@ -83,12 +127,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
         newDancer.name = "Cassie Winter"
         self.dancerDict[newDancer.name!] = newDancer
-
-//        do {
-//            try DVOCoreData.sharedObject.managedObjectContext.save()
-//        } catch {
-//            print ("could not save found dancers")
-//        }
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Kyle Red"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Sara Van Drake"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Wayne Ohmer"
+        self.dancerDict[newDancer.name!] = newDancer
+        newDancer = Dancer(entity: dancerEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+        newDancer.name = "Janine Ohmer"
+        self.dancerDict[newDancer.name!] = newDancer
 
     }
     
@@ -149,6 +199,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         studio = Studio(entity: studioEntity!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
         studio.name = "Home"
         studio.locationKey = "4553.0:-12292.0"
+        studio.defaultInstructor = self.dancerDict["Cassie Winter"]
+        
         do {
             try DVOCoreData.sharedObject.managedObjectContext.save()
         } catch {
@@ -188,6 +240,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        } catch {
 //            abort()
 //        }
+        
+       
+        
+        
         guard let videoAssetEntity = NSEntityDescription.entityForName(VideoAssets.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext) else { return }
         
         let videoAssetFetch = NSFetchRequest()
@@ -210,16 +266,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             abort()
         }
         
+        var allCollections = [PHAssetCollection]()
+        let collectionFetchResult = PHAssetCollection.fetchAssetCollectionsWithType(.Album, subtype: .Any, options: nil)
+        collectionFetchResult.enumerateObjectsUsingBlock { (collection, index, done) in
+            if let thisCollection = collection as? PHAssetCollection {
+                allCollections.append(thisCollection)
+            }
+        }
         let allVideosOptions = PHFetchOptions()
         allVideosOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         allVideosOptions.predicate = NSPredicate(format: "mediaType = \(PHAssetMediaType.Video.rawValue) ")
-        let allVideos = PHAsset.fetchAssetsWithOptions(allVideosOptions)
+        allVideosOptions.includeAssetSourceTypes = [PHAssetSourceType.TypeCloudShared,PHAssetSourceType.TypeUserLibrary,PHAssetSourceType.TypeiTunesSynced]
+        let allVideos = PHAsset.fetchAssetsWithMediaType(.Video, options: allVideosOptions)
         
         allVideos.enumerateObjectsUsingBlock() { (asset, index, done) in
             if let thisAsset = asset as? PHAsset {
                 if localKeys[thisAsset.localIdentifier] == nil  {
                     let newVideoAsset = VideoAssets(entity: videoAssetEntity, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
                     newVideoAsset.localIdentifier = thisAsset.localIdentifier
+                    
                     if let thisLocation = thisAsset.location {
                         let locationKey = "\(round(thisLocation.coordinate.latitude*100)):\(round(thisLocation.coordinate.longitude*100))"
                         newVideoAsset.locationKey = locationKey
@@ -233,8 +298,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                         if let address = addressDictionary["FormattedAddressLines"] as? [String] {
                                             DVOCoreData.foundAddresses["locationKey"] = "\(address[0]), \(address[1])"
                                             newVideoAsset.address = "\(address[0]), \(address[1])"
-                                            //newStudio.address = "\(address[0]), \(address[1])"
-                                            //newStudio.locationKey = locationKey
                                             do {
                                                 try DVOCoreData.sharedObject.managedObjectContext.save()
                                             } catch {
@@ -253,6 +316,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
-
+    
 }
 
