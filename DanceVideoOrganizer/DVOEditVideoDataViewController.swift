@@ -10,7 +10,7 @@ import UIKit
 import AVKit
 import Photos
 
-class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITableViewDelegate {
+class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITableViewDelegate, UITableViewDataSource {
 
     var videoAsset = DVOVideoAsset()
     var cellArray: [DVOMetaDataEntryLayout.CellData]!
@@ -22,14 +22,15 @@ class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITabl
         super.viewDidLoad()
         self.thumbNailImageView.image = self.videoAsset.thumbNail
         self.layout = DVOMetaDataEntryLayout(videoAsset: self.videoAsset)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(saveTouched))
-       
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTouched))
 
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.cellArray = self.layout.updateCells()
         self.layoutTableView.reloadData()
+        self.layoutTableView.tableFooterView = UIView(frame: CGRect.zero)
+
     }
     
     func saveTouched() {
@@ -39,11 +40,11 @@ class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITabl
         } catch {
             print ("could not save metaData")
         }
-        self.navigationController?.popToRootViewControllerAnimated(true)
+        _ = self.navigationController?.popToRootViewController(animated: true)
     }
     
         
-    @IBAction func typeChanged(sender: UISegmentedControl) {
+    @IBAction func typeChanged(_ sender: UISegmentedControl) {
         self.layout.handleTypeChange(sender.selectedSegmentIndex)
         self.cellArray = self.layout.updateCells()
         self.layoutTableView.reloadData()
@@ -53,30 +54,30 @@ class DVOEditVideoDataViewController: UIViewController, UITabBarDelegate, UITabl
         super.didReceiveMemoryWarning()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let controller = segue.destinationViewController as! DVOVideoPlayerViewController
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let controller = segue.destination as! DVOVideoPlayerViewController
         controller.videoAsset = self.videoAsset.videoAsset!
         
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+    func numberOfSections(in tableView: UITableView) -> Int {
+         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.cellArray.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("DVOMetaDataEntryCell", forIndexPath: indexPath) as! DVOMetaDataEntryCell
-        cell.descriptionLabel.text = self.cellArray[indexPath.item].description
-        cell.dataLabel.text = self.cellArray[indexPath.item].data
-        cell.hidden = !self.cellArray[indexPath.item].visible
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DVOMetaDataEntryCell", for: indexPath) as! DVOMetaDataEntryCell
+        cell.descriptionLabel.text = self.cellArray[(indexPath as NSIndexPath).item].description
+        cell.dataLabel.text = self.cellArray[(indexPath as NSIndexPath).item].data
+        cell.isHidden = !self.cellArray[(indexPath as NSIndexPath).item].visible
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.cellArray[indexPath.item].destination?(navController: self.navigationController)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.cellArray[indexPath.item].destination?(self.navigationController)
     }
 
 }

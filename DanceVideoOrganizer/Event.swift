@@ -24,8 +24,8 @@ class Event: NSManagedObject, SearchableName {
     static let entityName = "Event"
     @NSManaged var name: String?
     @NSManaged var locationKey: String?
-    @NSManaged var startDate: NSDate?
-    @NSManaged var endDate: NSDate?
+    @NSManaged var startDate: Date?
+    @NSManaged var endDate: Date?
     @NSManaged var address: String?
     @NSManaged var instructors: Set<Dancer>?
     @NSManaged var metaData: Set<VideoMetaData>?

@@ -15,21 +15,21 @@ class DVOMetaDataEntryLayout: NSObject {
         var description = ""
         var data = ""
         var visible = true
-        var destination:((navController: UINavigationController?) -> ())? = nil
+        var destination:((_ navController: UINavigationController?) -> ())? = nil
     }
     
     var cellDict = [String:CellData]()
     let cellOrder = [VideoMetaDataAttributes.title,VideoMetaDataAttributes.location,VideoMetaDataAttributes.instructors,VideoMetaDataAttributes.date,VideoMetaDataAttributes.CompRound]
-    var metaData = VideoMetaData(entity: NSEntityDescription.entityForName(VideoMetaData.entityName, inManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)!, insertIntoManagedObjectContext: DVOCoreData.sharedObject.managedObjectContext)
+    var metaData = VideoMetaData(entity: NSEntityDescription.entity(forEntityName: VideoMetaData.entityName, in: DVOCoreData.sharedObject.managedObjectContext)!, insertInto: DVOCoreData.sharedObject.managedObjectContext)
     let mainStoryboard = UIStoryboard(name:"Main", bundle: nil)
 
     convenience init(videoAsset: DVOVideoAsset) {
         self.init()
         var instructorName = ""
-        let fetchedResultsController = DVOCoreData.fetchStudios(NSPredicate(format: "name = \"\(videoAsset.locationName)\" "))
+        let fetchedResultsController = DVOCoreData.fetchStudios(predicate: NSPredicate(format: "name = \"\(videoAsset.locationName)\" "))
         do {
             try fetchedResultsController.performFetch()
-            if let studios = fetchedResultsController.fetchedObjects as? [Studio] {
+            if let studios = fetchedResultsController.fetchedObjects as [Studio]? {
                 for studio in studios {
                     if let defautInstructor = studio.defaultInstructor {
                         instructorName = defautInstructor.name ?? ""
@@ -45,7 +45,7 @@ class DVOMetaDataEntryLayout: NSObject {
             let fetchedResultsController = DVOCoreData.fetchEvents(NSPredicate(format: "name = \"\(videoAsset.locationName)\" "))
             do {
                 try fetchedResultsController.performFetch()
-                if let events = fetchedResultsController.fetchedObjects as? [Event] {
+                if let events = fetchedResultsController.fetchedObjects as [Event]? {
                     for event in events {
                         self.metaData.event = event
                     }
@@ -58,28 +58,28 @@ class DVOMetaDataEntryLayout: NSObject {
         let asset = DVOCoreData.fetchVideoAssetWithIdentifier(videoAsset.assetLocalIdentifier)
         self.metaData.asset = asset
         
-        self.cellDict = [VideoMetaDataAttributes.title: CellData(description: "Title:", data: self.metaData.title ?? "", visible: true, destination: self.handleTitle),
-                         VideoMetaDataAttributes.location: CellData(description: "Location:", data: self.metaData.location, visible: true, destination: self.handleLocation),
-                         VideoMetaDataAttributes.instructors: CellData(description: "Instructor(s):", data: instructorName, visible: true, destination: self.handleInstructor),
-                         VideoMetaDataAttributes.CompRound: CellData(description: "Comp:", data: "", visible: false, destination: self.handleComp),
-                         VideoMetaDataAttributes.date: CellData(description: "Date:", data: DVODateFormatter.formattedDate(self.metaData.date), visible: true, destination: self.handleDate)]
+        self.cellDict = [VideoMetaDataAttributes.title: CellData(description: "Title", data: self.metaData.title ?? "", visible: true, destination: self.handleTitle),
+                         VideoMetaDataAttributes.location: CellData(description: "Location", data: self.metaData.location, visible: true, destination: self.handleLocation),
+                         VideoMetaDataAttributes.instructors: CellData(description: "Instructor(s)", data: instructorName, visible: true, destination: self.handleInstructor),
+                         VideoMetaDataAttributes.CompRound: CellData(description: "Comp", data: "", visible: false, destination: self.handleComp),
+                         VideoMetaDataAttributes.date: CellData(description: "Date", data: DVODateFormatter.formattedDate(self.metaData.date), visible: true, destination: self.handleDate)]
     
     }
     
-    func handleTitle(navController: UINavigationController?) {
-        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVOMetaDataTitleViewController") as! DVOMetaDataTitleViewController
+    func handleTitle(_ navController: UINavigationController?) {
+        let vc = self.mainStoryboard.instantiateViewController(withIdentifier: "DVOMetaDataTitleViewController") as! DVOMetaDataTitleViewController
         vc.metaData = self.metaData
         navController?.pushViewController(vc, animated: true)
     }
     
-    func handleLocation(navController: UINavigationController?) {
-        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVOLocationTableViewController") as! DVOLocationTableViewController
+    func handleLocation(_ navController: UINavigationController?) {
+        let vc = self.mainStoryboard.instantiateViewController(withIdentifier: "DVOLocationTableViewController") as! DVOLocationTableViewController
         vc.metaData = self.metaData
         navController?.pushViewController(vc, animated: true)
     }
     
-    func handleInstructor(navController: UINavigationController?) {
-        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVODancerTableViewController") as! DVODancerTableViewController
+    func handleInstructor(_ navController: UINavigationController?) {
+        let vc = self.mainStoryboard.instantiateViewController(withIdentifier: "DVODancerTableViewController") as! DVODancerTableViewController
         vc.metaData = self.metaData
         if let instructors = self.metaData.instructors  {
             vc.selectedDancers = [String:Dancer]()
@@ -89,19 +89,19 @@ class DVOMetaDataEntryLayout: NSObject {
         navController?.pushViewController(vc, animated: true)
     }
     
-    func handleDate(navController: UINavigationController?){
-        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVODateEntryViewController") as! DVODateEntryViewController
+    func handleDate(_ navController: UINavigationController?){
+        let vc = self.mainStoryboard.instantiateViewController(withIdentifier: "DVODateEntryViewController") as! DVODateEntryViewController
         vc.metaData = self.metaData
         navController?.pushViewController(vc, animated: true)
     }
     
-    func handleComp(navController: UINavigationController?) {
-        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVOCompEditViewController") as! DVOCompEditViewController
+    func handleComp(_ navController: UINavigationController?) {
+        let vc = self.mainStoryboard.instantiateViewController(withIdentifier: "DVOCompEditViewController") as! DVOCompEditViewController
         vc.metaData = self.metaData
         navController?.pushViewController(vc, animated: true)
     }
     
-    func handleTypeChange(type: Int) {
+    func handleTypeChange(_ type: Int) {
         switch type {
         case 0:
             self.cellDict[VideoMetaDataAttributes.instructors]?.description = "Instructor(s):"
@@ -120,7 +120,7 @@ class DVOMetaDataEntryLayout: NSObject {
     
     func updateCells() -> [CellData] {
         self.cellDict[VideoMetaDataAttributes.title]!.data = self.metaData.title ?? ""
-        self.cellDict[VideoMetaDataAttributes.location]!.data = self.metaData.location ?? ""
+        self.cellDict[VideoMetaDataAttributes.location]!.data = self.metaData.location
         var intructorNames = [String]()
         if let dancers = self.metaData.instructors {
             if !dancers.isEmpty {
@@ -133,7 +133,7 @@ class DVOMetaDataEntryLayout: NSObject {
                 self.metaData.instructors = Set([self.metaData.studio!.defaultInstructor!])
             }
         }
-        self.cellDict[VideoMetaDataAttributes.instructors]!.data = intructorNames.joinWithSeparator(", ")
+        self.cellDict[VideoMetaDataAttributes.instructors]!.data = intructorNames.joined(separator: ", ")
         self.cellDict[VideoMetaDataAttributes.date]!.data = DVODateFormatter.formattedDate(self.metaData.date)
         self.cellDict[VideoMetaDataAttributes.CompRound]!.data = self.metaData.compDescription
         var returnArray = [CellData]()

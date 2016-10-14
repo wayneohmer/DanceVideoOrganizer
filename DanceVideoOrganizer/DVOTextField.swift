@@ -12,9 +12,9 @@ class DVOTextField: UITextField, UITextFieldDelegate
 {
 
     // properties for overiding delegate functions.
-    var shouldReturnClosure:((textField: UITextField) -> Bool)? = nil
-    var shouldChangeCharactersInRangeClosure:((textField: UITextField, range: NSRange, replacementString: String) -> Bool)? = nil
-    var didEndDidEndEditingClosure:((textField: UITextField) -> ())? = nil
+    var shouldReturnClosure:((_ textField: UITextField) -> Bool)? = nil
+    var shouldChangeCharactersInRangeClosure:((_ textField: UITextField, _ range: NSRange, _ replacementString: String) -> Bool)? = nil
+    var didEndDidEndEditingClosure:((_ textField: UITextField) -> ())? = nil
     
     @IBInspectable var title:String?
     @IBInspectable var maxLength:Int = 0
@@ -34,7 +34,7 @@ class DVOTextField: UITextField, UITextFieldDelegate
     
     @IBInspectable var borderColor: UIColor? {
         didSet {
-            layer.borderColor = borderColor?.CGColor
+            layer.borderColor = borderColor?.cgColor
         }
     }
 
@@ -49,24 +49,24 @@ class DVOTextField: UITextField, UITextFieldDelegate
         self.delegate = self
     }
     //Override textRects to pad left margin. Without this, text is smashed against the left border. This matches the default for textFields.
-    override func textRectForBounds(bounds: CGRect) -> CGRect
+    override func textRect(forBounds bounds: CGRect) -> CGRect
     {
         return UIEdgeInsetsInsetRect(bounds,UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5))
     }
     
-    override func editingRectForBounds(bounds: CGRect) -> CGRect
+    override func editingRect(forBounds bounds: CGRect) -> CGRect
     {
-        return self.textRectForBounds(bounds);
+        return self.textRect(forBounds: bounds);
     }
     
-    func addInputAccessoryBarWithTitle(title:String)
+    func addInputAccessoryBarWithTitle(_ title:String)
     {
         if let bar = DVOInputAccessoryBar.newAccessoryBarWithTitle(title,textField:self) {
             self.inputAccessoryView = bar
         }
     }
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
     {
         var returnValue = true
         if (range.length + range.location > textField.text!.characters.count ) {
@@ -79,21 +79,21 @@ class DVOTextField: UITextField, UITextFieldDelegate
             returnValue = true
         }
         if shouldChangeCharactersInRangeClosure != nil {
-            return returnValue && self.shouldChangeCharactersInRangeClosure!(textField: textField,range: range, replacementString: string)
+            return returnValue && self.shouldChangeCharactersInRangeClosure!(textField,range, string)
             
         } else {
             return returnValue
         }
     }
     
-    func textFieldDidEndEditing(textField: UITextField)
+    func textFieldDidEndEditing(_ textField: UITextField)
     {
-        self.didEndDidEndEditingClosure?(textField: textField)
+        self.didEndDidEndEditingClosure?(textField)
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if self.shouldReturnClosure != nil {
-            return (self.shouldReturnClosure?(textField: textField))!
+            return (self.shouldReturnClosure?(textField))!
         } else {
             return true
         }

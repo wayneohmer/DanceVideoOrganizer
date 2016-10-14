@@ -18,5 +18,5 @@ class DVOVideoAsset {
     var locationName = ""
     var locationKey = ""
     var instructors = ""
-    var creationDate = NSDate()
+    var creationDate = Date()
 }

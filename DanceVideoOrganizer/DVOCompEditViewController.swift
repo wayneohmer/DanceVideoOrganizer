@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CoreData
+
 
 class DVOCompEditViewController: UIViewController {
 
@@ -23,7 +25,7 @@ class DVOCompEditViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(saveButtonTouched))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTouched))
 
         self.compLevelObject = DVOSearchableTableViewDelegate(tableView: compLevelTableView, showSearchBar: false)
         if let complevels = self.metaData.compLevel {
@@ -45,11 +47,11 @@ class DVOCompEditViewController: UIViewController {
         self.compRoundObject.allowMultipleSelection = false
         
         definesPresentationContext = true
-        NSNotificationCenter.defaultCenter().addObserver(self, selector:#selector(tableViewChanged), name: "searchableTalbleViewChanged", object: nil)
+        NotificationCenter.default.addObserver(self, selector:#selector(tableViewChanged), name: NSNotification.Name(rawValue: "searchableTalbleViewChanged"), object: nil)
         let levelFetchController = DVOCoreData.fetchCompLevels()
         do {
             try levelFetchController.performFetch()
-            if let compLevels = levelFetchController.fetchedObjects as? [CompLevel] {
+            if let compLevels = levelFetchController.fetchedObjects as [CompLevel]? {
                 for complevel in compLevels {
                     if complevel.levelDesc != nil  {
                         self.compLevelObject.cellArray.append(complevel)
@@ -63,7 +65,7 @@ class DVOCompEditViewController: UIViewController {
         let typeFetchController = DVOCoreData.fetchCompTypes()
         do {
             try typeFetchController.performFetch()
-            if let compTypes = typeFetchController.fetchedObjects as? [CompType] {
+            if let compTypes = typeFetchController.fetchedObjects as [CompType]? {
                 for compType in compTypes {
                     if compType.typeDesc != nil  {
                         self.compTypeObject.cellArray.append(compType)
@@ -77,7 +79,7 @@ class DVOCompEditViewController: UIViewController {
         let roundFetchController = DVOCoreData.fetchCompRounds()
         do {
             try roundFetchController.performFetch()
-            if let compRounds = roundFetchController.fetchedObjects as? [CompRound] {
+            if let compRounds = roundFetchController.fetchedObjects as [CompRound]? {
                 for compRound in compRounds {
                     if compRound.roundDesc != nil  {
                         self.compRoundObject.cellArray.append(compRound)
@@ -99,7 +101,7 @@ class DVOCompEditViewController: UIViewController {
         for (key,_) in compLevelObject.selectedDict {
             levelsArray.append(key)
         }
-        self.selectedLabel.text = "\(levelsArray.joinWithSeparator("/"))"
+        self.selectedLabel.text = "\(levelsArray.joined(separator: "/"))"
         for (key,_) in compTypeObject.selectedDict {
             self.selectedLabel.text = "\(self.selectedLabel.text!) \(key)"
         }
@@ -120,7 +122,7 @@ class DVOCompEditViewController: UIViewController {
         for (_,round) in compRoundObject.selectedDict {
             self.metaData.compRound = round as? CompRound
         }
-        self.navigationController?.popViewControllerAnimated(true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     override func didReceiveMemoryWarning() {
@@ -140,3 +142,4 @@ class DVOCompEditViewController: UIViewController {
     */
 
 }
+

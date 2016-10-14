@@ -19,7 +19,7 @@ class DVOMetaDataTitleViewController: UIViewController {
         self.titleField.addInputAccessoryBarWithTitle(self.titleField.title ?? "")
         self.titleField.didEndDidEndEditingClosure = { (textField: UITextField) in
             self.metaData.title = textField.text
-            self.navigationController?.popViewControllerAnimated(true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
         self.titleField.becomeFirstResponder()
     }

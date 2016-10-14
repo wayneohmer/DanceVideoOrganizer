@@ -16,15 +16,16 @@ class DVODateEntryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(saveTouched))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTouched))
         self.dateLabel.text = DVODateFormatter.formattedDate(self.metaData.date)
-        self.datePicker.date = self.metaData.date ?? NSDate()
+        self.datePicker.date = self.metaData.date as Date? ?? Date()
+        
         // Do any additional setup after loading the view.
     }
     
     func saveTouched() {
         self.metaData.date = self.datePicker.date
-        self.navigationController?.popViewControllerAnimated(true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,7 +33,7 @@ class DVODateEntryViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func dateChanged(sender: UIDatePicker) {
+    @IBAction func dateChanged(_ sender: UIDatePicker) {
         self.dateLabel.text = DVODateFormatter.formattedDate(sender.date)
     }
 

@@ -18,7 +18,7 @@ public struct StudioAttributes {
     static let defaultInstructor = "defaultInstructor"
 }
 
-public class Studio: NSManagedObject, SearchableName {
+open class Studio: NSManagedObject, SearchableName {
 
     static let entityName = "Studio"
     @NSManaged var address: String?

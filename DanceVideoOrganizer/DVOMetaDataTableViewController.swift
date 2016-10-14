@@ -18,28 +18,28 @@ class DVOMetaDataTableViewController: UITableViewController {
         let fetchedResultsController = DVOCoreData.fetchMetaData()
         do {
             try fetchedResultsController.performFetch()
-            if let metaData = fetchedResultsController.fetchedObjects as? [VideoMetaData] {
+            if let metaData = fetchedResultsController.fetchedObjects as [VideoMetaData]? {
                 self.metaData = metaData
                 for metaDatum in metaData {
-                    if let localIdentifier = metaDatum.asset?.valueForKey("localIdentifier") as? String {
+                    if let localIdentifier = metaDatum.asset?.value(forKey: "localIdentifier") as? String {
                         let allVideosOptions = PHFetchOptions()
                         allVideosOptions.predicate = NSPredicate(format: "localIdentifier = \"\(localIdentifier)\"")
-                        allVideosOptions.includeAssetSourceTypes =  [PHAssetSourceType.TypeCloudShared,PHAssetSourceType.TypeUserLibrary,PHAssetSourceType.TypeiTunesSynced]
-                        let getVideos = PHAsset.fetchAssetsWithOptions(allVideosOptions)
-                        getVideos.enumerateObjectsUsingBlock() { (asset, index, done) in
+                        allVideosOptions.includeAssetSourceTypes =  [PHAssetSourceType.typeCloudShared,PHAssetSourceType.typeUserLibrary,PHAssetSourceType.typeiTunesSynced]
+                        let getVideos = PHAsset.fetchAssets(with: allVideosOptions)
+                        getVideos.enumerateObjects({ (asset, index, done) in
                             let imageManager = PHImageManager()
                             
-                            imageManager.requestImageForAsset(asset as! PHAsset, targetSize: CGSize(width: 500, height: 500) , contentMode: .AspectFill, options: nil) { (result, info) in
+                            imageManager.requestImage(for: asset, targetSize: CGSize(width: 500, height: 500) , contentMode: .aspectFill, options: nil) { (result, info) in
                                 if let thisResult = result {
                                     metaDatum.thumbnail = thisResult
                                 }
                             }
                             let options = PHVideoRequestOptions()
-                            options.networkAccessAllowed = true
-                            imageManager.requestAVAssetForVideo(asset as! PHAsset, options: options ) { (videoAsset, mix, info) in
+                            options.isNetworkAccessAllowed = true
+                            imageManager.requestAVAsset(forVideo: asset, options: options ) { (videoAsset, mix, info) in
                                 metaDatum.avAsset = videoAsset
                             }
-                        }
+                        })
                     }
                 }
                 self.tableView.reloadData()
@@ -51,17 +51,17 @@ class DVOMetaDataTableViewController: UITableViewController {
     
     // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.metaData.count
     }
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("DVOMetaDataCell") as! DVOMetaDataCell
-        let thisMetaData = self.metaData[indexPath.item]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "DVOMetaDataCell") as! DVOMetaDataCell
+        let thisMetaData = self.metaData[(indexPath as NSIndexPath).item]
         cell.thumbNailImagView.image = thisMetaData.thumbnail
         cell.locationLabel.text = thisMetaData.location
         cell.dancersLabel.text = thisMetaData.dancers

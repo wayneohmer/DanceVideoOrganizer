@@ -17,6 +17,7 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
     var selectedLocation: SearchableName?
     let searchController = UISearchController(searchResultsController: nil)
     let mainStoryboard = UIStoryboard(name:"Main", bundle: nil)
+    
     @IBOutlet var locationTypeSegmentedControl: UISegmentedControl!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,10 +25,10 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
         let eventFetchController = DVOCoreData.fetchEvents()
         do {
             try eventFetchController.performFetch()
-            if let events = eventFetchController.fetchedObjects as? [Event] {
+            if let events = eventFetchController.fetchedObjects as [Event]? {
                 for event in events {
                     if event.name != nil && event.name != "" {
-                        self.locationArray[0].append(event)
+                        self.locationArray[1].append(event)
                         if let selectedName = self.selectedLocation?.searchableName {
                             if event.name == selectedName {
                                 self.selectedName = selectedName
@@ -43,10 +44,10 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
         let studioFetchController = DVOCoreData.fetchStudios()
         do {
             try studioFetchController.performFetch()
-            if let studios = studioFetchController.fetchedObjects as? [Studio] {
+            if let studios = studioFetchController.fetchedObjects as [Studio]? {
                 for studio in studios {
                     if studio.name != nil && studio.name != "" {
-                        self.locationArray[1].append(studio)
+                        self.locationArray[0].append(studio)
                         if let selectedName = self.selectedLocation?.searchableName {
                             if studio.name == selectedName {
                                 self.selectedName = selectedName
@@ -64,7 +65,8 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
         definesPresentationContext = true
         self.tableView.tableHeaderView = searchController.searchBar
         self.filteredArray = self.locationArray[self.locationTypeSegmentedControl.selectedSegmentIndex]
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addButtonTouched))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTouched))
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,7 +80,7 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
     }
 
     func addButtonTouched() {
-        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier("DVOLocationEditViewController") as! DVOLocationEditViewController
+        let vc = self.mainStoryboard.instantiateViewController(withIdentifier: "DVOLocationEditViewController") as! DVOLocationEditViewController
         vc.metaData = self.metaData
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -86,7 +88,7 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
     func filterContentForSearchText(searchText: String, scope: String = "All") {
         if searchText != "" {
             self.filteredArray =  self.locationArray[self.locationTypeSegmentedControl.selectedSegmentIndex].filter { location in
-                return location.searchableName.lowercaseString.containsString(searchText.lowercaseString)
+                return location.searchableName.lowercased().contains(searchText.lowercased())
             }
         } else {
             self.filteredArray = self.locationArray[self.locationTypeSegmentedControl.selectedSegmentIndex]
@@ -94,85 +96,41 @@ class DVOLocationTableViewController: UITableViewController, UISearchResultsUpda
         self.tableView.reloadData()
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        self.filterContentForSearchText(searchController.searchBar.text!)
+    func updateSearchResults(for searchController: UISearchController) {
+        self.filterContentForSearchText(searchText: searchController.searchBar.text!)
     }
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filteredArray.count
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = self.filteredArray[indexPath.item].searchableName
+        cell.textLabel?.text = self.filteredArray[(indexPath as NSIndexPath).item].searchableName
         if self.selectedName == cell.textLabel?.text {
-            cell.accessoryType = .Checkmark
+            cell.accessoryType = .checkmark
         }
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = self.tableView.cellForRowAtIndexPath(indexPath)
-        cell?.accessoryType = .Checkmark
-        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        if self.filteredArray[indexPath.item] is Studio {
-            self.metaData.studio = self.filteredArray[indexPath.item] as? Studio
-        } else if self.filteredArray[indexPath.item] is Event {
-            self.metaData.event = self.filteredArray[indexPath.item] as? Event
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = self.tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .checkmark
+        self.tableView.deselectRow(at: indexPath, animated: true)
+        if self.filteredArray[(indexPath as NSIndexPath).item] is Studio {
+            self.metaData.studio = self.filteredArray[(indexPath as NSIndexPath).item] as? Studio
+        } else if self.filteredArray[(indexPath as NSIndexPath).item] is Event {
+            self.metaData.event = self.filteredArray[(indexPath as NSIndexPath).item] as? Event
         }
-        self.navigationController?.popViewControllerAnimated(true)
+        _ = self.navigationController?.popViewController(animated: true)
        
     }
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

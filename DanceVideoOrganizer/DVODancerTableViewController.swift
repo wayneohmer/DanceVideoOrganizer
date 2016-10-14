@@ -21,7 +21,7 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
         let dancerFetchController = DVOCoreData.fetchDancers()
         do {
             try dancerFetchController.performFetch()
-            if let objects = dancerFetchController.fetchedObjects as? [Dancer] {
+            if let objects = dancerFetchController.fetchedObjects as [Dancer]? {
                 for data in objects {
                     if data.name != nil && data.name != "" {
                         self.nameArray.append(data)
@@ -41,7 +41,9 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .Plain, target: self, action: #selector(saveTouched))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTouched))
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,14 +59,14 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
                 self.metaData.instructors = self.metaData.instructors?.union(Set([dancer]))
             }
         }
-        self.navigationController?.popViewControllerAnimated(true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
-    func filterContentForSearchText(searchText: String, scope: String = "All") {
+    func filterContentForSearchText(_ searchText: String, scope: String = "All") {
         if searchText != "" {
             self.filteredArray = self.nameArray.filter { studio in
                 
-                return studio.name!.lowercaseString.containsString(searchText.lowercaseString)
+                return studio.name!.lowercased().contains(searchText.lowercased())
             }
         } else {
             self.filteredArray = self.nameArray
@@ -72,94 +74,40 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
         tableView.reloadData()
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         self.filterContentForSearchText(searchController.searchBar.text!)
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filteredArray.count
     }
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = self.filteredArray[indexPath.item].name
-        if selectedDancers?[self.filteredArray[indexPath.item].name!] != nil {
-            cell.accessoryType = .Checkmark
+        cell.textLabel?.text = self.filteredArray[(indexPath as NSIndexPath).item].name
+        if selectedDancers?[self.filteredArray[(indexPath as NSIndexPath).item].name!] != nil {
+            cell.accessoryType = .checkmark
         }
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = self.tableView.cellForRowAtIndexPath(indexPath)
-        cell?.accessoryType = .Checkmark
-        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        if self.selectedDancers![self.filteredArray[indexPath.item].name!] == nil {
-            self.selectedDancers![self.filteredArray[indexPath.item].name!] = self.filteredArray[indexPath.item]
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = self.tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .checkmark
+        self.tableView.deselectRow(at: indexPath, animated: true)
+        if self.selectedDancers![self.filteredArray[(indexPath as NSIndexPath).item].name!] == nil {
+            self.selectedDancers![self.filteredArray[(indexPath as NSIndexPath).item].name!] = self.filteredArray[(indexPath as NSIndexPath).item]
         } else {
-            self.selectedDancers![self.filteredArray[indexPath.item].name!] = nil
+            self.selectedDancers![self.filteredArray[(indexPath as NSIndexPath).item].name!] = nil
             self.tableView.reloadData()
         }
         
     }
-
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

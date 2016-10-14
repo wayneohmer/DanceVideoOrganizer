@@ -28,14 +28,14 @@ class DVOInputAccessoryBar: UINavigationBar
     class func newAccessoryBar() -> DVOInputAccessoryBar?
     {
         
-        if let returnBar = NSBundle.mainBundle().loadNibNamed("DVOInputAccessoryBar", owner: self, options: nil)[0] as? DVOInputAccessoryBar {
+        if let returnBar = Bundle.main.loadNibNamed("DVOInputAccessoryBar", owner: self, options: nil)?[0] as? DVOInputAccessoryBar {
             return returnBar
         }
         
         return nil
     }
     
-    class func newAccessoryBarWithTitle(title:String) -> DVOInputAccessoryBar?
+    class func newAccessoryBarWithTitle(_ title:String) -> DVOInputAccessoryBar?
     {
         if let returnBar = self.newAccessoryBar() {
             returnBar.titleItem.title = title
@@ -45,7 +45,7 @@ class DVOInputAccessoryBar: UINavigationBar
         return nil
     }
     
-    class func newAccessoryBarWithTitle(title:String,textField:UITextField) -> DVOInputAccessoryBar?
+    class func newAccessoryBarWithTitle(_ title:String,textField:UITextField) -> DVOInputAccessoryBar?
     {
         if let returnBar = self.newAccessoryBarWithTitle(title) {
             returnBar.textField = textField
@@ -59,12 +59,12 @@ class DVOInputAccessoryBar: UINavigationBar
     override func awakeFromNib()
     {
         //self.barTintColor = BTGlobals.customColors[BTColorKeys.bonziLightGrey]
-        self.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.blackColor()]
+        self.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.black]
        // self.tintColor = BTGlobals.customColors[BTColorKeys.bonziCharcoal]
-        self.barStyle = .Default
+        self.barStyle = .default
     }
     
-    @IBAction func cancelButtonTouch(sender: UIBarButtonItem)
+    @IBAction func cancelButtonTouch(_ sender: UIBarButtonItem)
     {
         if self.textField != nil {
             self.textField?.text = self.savedText
@@ -75,7 +75,7 @@ class DVOInputAccessoryBar: UINavigationBar
         }
     }
 
-    @IBAction func applyButtonTouch(sender: UIBarButtonItem)
+    @IBAction func applyButtonTouch(_ sender: UIBarButtonItem)
     {
         if self.textField != nil {
             self.savedText = self.textField!.text

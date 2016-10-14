@@ -22,13 +22,13 @@ class DVOVideoPlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.navigationBar.isTranslucent = false
         self.playerController.player = AVPlayer(playerItem: AVPlayerItem(asset: videoAsset))
-        playerController.view.frame = CGRectMake(0, 0, self.videoPlayerView.frame.width, self.videoPlayerView.frame.height)
+        playerController.view.frame = CGRect(x: 0, y: 0, width: self.videoPlayerView.frame.width, height: self.videoPlayerView.frame.height)
         self.videoPlayerView.addSubview(playerController.view)
         
         self.videoPlayerView.layer.borderWidth = 3
-        self.videoPlayerView.layer.borderColor = UIColor.blackColor().CGColor
+        self.videoPlayerView.layer.borderColor = UIColor.black.cgColor
         self.videoPlayerView.layoutIfNeeded()
         //controller.player?.play()
 
@@ -42,9 +42,9 @@ class DVOVideoPlayerViewController: UIViewController {
     
     @IBAction func momentButtonTouched() {
         savedTimes.append((self.playerController.player!.currentItem?.currentTime())!)
-        savedTimes.sortInPlace(){ CMTimeGetSeconds($0) > CMTimeGetSeconds($1) }
+        savedTimes.sort(){ CMTimeGetSeconds($0) > CMTimeGetSeconds($1) }
         var times = ""
-        for time in self.savedTimes.reverse() {
+        for time in self.savedTimes.reversed() {
             times = "\(times) \(round(CMTimeGetSeconds(time)))"
         }
         self.momentLabel.text = times
@@ -54,9 +54,9 @@ class DVOVideoPlayerViewController: UIViewController {
     @IBAction func backButtonTouched() {
         
         let now = CMTimeGetSeconds((self.playerController.player!.currentItem?.currentTime())!)
-        for time in self.savedTimes.reverse() {
+        for time in self.savedTimes.reversed() {
             if CMTimeGetSeconds(time) < now {
-                self.playerController.player?.seekToTime(time)
+                self.playerController.player?.seek(to: time)
             }
         }
     }
@@ -64,12 +64,12 @@ class DVOVideoPlayerViewController: UIViewController {
     @IBAction func doubleBackTouched() {
         let now = CMTimeGetSeconds((self.playerController.player!.currentItem?.currentTime())!)
         var  first = true
-        for time in self.savedTimes.reverse() {
+        for time in self.savedTimes.reversed() {
             if CMTimeGetSeconds(time) < now {
                 if first {
                     first = false
                 } else {
-                    self.playerController.player?.seekToTime(time)
+                    self.playerController.player?.seek(to: time)
                     break
                 }
             }
@@ -80,7 +80,7 @@ class DVOVideoPlayerViewController: UIViewController {
         let now = CMTimeGetSeconds((self.playerController.player!.currentItem?.currentTime())!)
         for time in self.savedTimes {
             if CMTimeGetSeconds(time) > now {
-                self.playerController.player?.seekToTime(time)
+                self.playerController.player?.seek(to: time)
             }
         }
     }

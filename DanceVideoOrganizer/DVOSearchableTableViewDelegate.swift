@@ -22,6 +22,7 @@ class DVOSearchableTableViewDelegate: NSObject, UITableViewDelegate, UITableView
         self.searchController.searchResultsUpdater = self
         self.searchController.dimsBackgroundDuringPresentation = false
         self.searchController.hidesNavigationBarDuringPresentation = false
+
     }
     
     convenience init(tableView: UITableView, showSearchBar:Bool) {
@@ -32,6 +33,7 @@ class DVOSearchableTableViewDelegate: NSObject, UITableViewDelegate, UITableView
         }
         self.tableView?.delegate = self
         self.tableView?.dataSource = self
+
     }
     
     func update() {
@@ -39,12 +41,12 @@ class DVOSearchableTableViewDelegate: NSObject, UITableViewDelegate, UITableView
         self.tableView?.reloadData()
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
         if searchText != "" {
             self.filteredArray = self.cellArray.filter { cellObject in
                 
-                return cellObject.searchableName.lowercaseString.containsString(searchText.lowercaseString)
+                return cellObject.searchableName.lowercased().contains(searchText.lowercased())
             }
         } else {
             self.filteredArray = self.cellArray
@@ -52,40 +54,40 @@ class DVOSearchableTableViewDelegate: NSObject, UITableViewDelegate, UITableView
         self.tableView?.reloadData()
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.filteredArray.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = self.filteredArray[indexPath.item].searchableName
-        if selectedDict[self.filteredArray[indexPath.item].searchableName] != nil {
-            cell.accessoryType = .Checkmark
+        cell.textLabel?.text = self.filteredArray[(indexPath as NSIndexPath).item].searchableName
+        if selectedDict[self.filteredArray[(indexPath as NSIndexPath).item].searchableName] != nil {
+            cell.accessoryType = .checkmark
         } else {
-            cell.accessoryType = .None
+            cell.accessoryType = .none
         }
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = tableView.cellForRowAtIndexPath(indexPath)
-        cell?.accessoryType = .Checkmark
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        if self.selectedDict[self.filteredArray[indexPath.item].searchableName] == nil {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        cell?.accessoryType = .checkmark
+        tableView.deselectRow(at: indexPath, animated: true)
+        if self.selectedDict[self.filteredArray[(indexPath as NSIndexPath).item].searchableName] == nil {
             if !allowMultipleSelection {
                 self.selectedDict.removeAll()
             }
-            self.selectedDict[self.filteredArray[indexPath.item].searchableName] = self.filteredArray[indexPath.item]
+            self.selectedDict[self.filteredArray[(indexPath as NSIndexPath).item].searchableName] = self.filteredArray[(indexPath as NSIndexPath).item]
         } else {
-            self.selectedDict[self.filteredArray[indexPath.item].searchableName] = nil
+            self.selectedDict[self.filteredArray[(indexPath as NSIndexPath).item].searchableName] = nil
         }
         tableView.reloadData()
-        self.searchController.active = false
-        NSNotificationCenter.defaultCenter().postNotificationName("searchableTalbleViewChanged" , object:nil, userInfo:nil)
+        self.searchController.isActive = false
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "searchableTalbleViewChanged") , object:nil, userInfo:nil)
         
     }
     

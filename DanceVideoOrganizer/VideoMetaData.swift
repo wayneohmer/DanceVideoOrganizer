@@ -27,12 +27,12 @@ public struct VideoMetaDataAttributes {
 
 }
 
-public class VideoMetaData: NSManagedObject {
+open class VideoMetaData: NSManagedObject {
     
     static let entityName = "VideoMetaData"
     @NSManaged var title: String?
     @NSManaged var type: String?
-    @NSManaged var date: NSDate?
+    @NSManaged var date: Date?
     @NSManaged var compRound: CompRound?
     @NSManaged var compLevel: Set<CompLevel>?
     @NSManaged var compType: CompType?
@@ -63,7 +63,7 @@ public class VideoMetaData: NSManagedObject {
             for dancer in dancers {
                 names.append(dancer.name ?? "")
             }
-            returnString = names.joinWithSeparator(", ")
+            returnString = names.joined(separator: ", ")
         }
         return returnString
     }
@@ -76,7 +76,7 @@ public class VideoMetaData: NSManagedObject {
             for level in levels {
                 levelsArray.append(level.levelDesc ?? "")
             }
-            returnString = "\(levelsArray.joinWithSeparator("/")) "
+            returnString = "\(levelsArray.joined(separator: "/")) "
         }
         if let typeDesc = self.compType?.typeDesc {
             returnString = "\(returnString)\(typeDesc) "

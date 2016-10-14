@@ -22,6 +22,7 @@ class DVOMainMenuTableViewController: UITableViewController {
         super.viewDidLoad()
         self.menu.append(MenuItem(title: "Browse Local Videos", storyboardId: "DVOSelectVideoTableViewController"))
         self.menu.append(MenuItem(title: "Browse MetaData", storyboardId: "DVOMetaDataTableViewController"))
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
 
     }
 
@@ -32,24 +33,24 @@ class DVOMainMenuTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.menu.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MenuItemCell", forIndexPath: indexPath) as! MenuItemCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MenuItemCell", for: indexPath) as! MenuItemCell
         
-        cell.itemNameLabel.text = self.menu[indexPath.item].title
+        cell.itemNameLabel.text = self.menu[(indexPath as NSIndexPath).item].title
         
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let vc = self.mainStoryboard.instantiateViewControllerWithIdentifier(self.menu[indexPath.item].storyboardId)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = self.mainStoryboard.instantiateViewController(withIdentifier: self.menu[(indexPath as NSIndexPath).item].storyboardId)
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

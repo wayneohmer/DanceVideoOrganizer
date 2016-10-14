@@ -17,11 +17,11 @@ public struct VideoAssetsAttributes {
     static let locationKey = "locationKey"
 }
 
-public class VideoAssets: NSManagedObject {
+open class VideoAssets: NSManagedObject {
     
     static let entityName = "VideoAssets"
     @NSManaged var address: String?
-    @NSManaged var createdDate: NSDate?
+    @NSManaged var createdDate: Date?
     @NSManaged var localIdentifier: String?
     @NSManaged var locationKey: String?
     @NSManaged var metaData: VideoMetaData?

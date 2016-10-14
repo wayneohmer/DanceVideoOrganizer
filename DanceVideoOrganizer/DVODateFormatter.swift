@@ -10,11 +10,11 @@ import UIKit
 
 class DVODateFormatter {
     
-    class func formattedDate(date: NSDate?) -> String {
+    class func formattedDate(_ date: Date?) -> String {
         guard let date = date else { return "" }
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "EE MM-dd-yyyy hh:mm a"
-        return formatter.stringFromDate(date)
+        return formatter.string(from: date)
     }
 
 }
