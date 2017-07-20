@@ -22,7 +22,6 @@ class DVOSearchableTableViewDelegate: NSObject, UITableViewDelegate, UITableView
         self.searchController.searchResultsUpdater = self
         self.searchController.dimsBackgroundDuringPresentation = false
         self.searchController.hidesNavigationBarDuringPresentation = false
-
     }
     
     convenience init(tableView: UITableView, showSearchBar:Bool) {

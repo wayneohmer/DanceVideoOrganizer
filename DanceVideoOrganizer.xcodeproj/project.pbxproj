@@ -10,6 +10,7 @@
 		CD4376DA1D11E72800E6E353 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4376D81D11E72800E6E353 /* Event.swift */; };
 		CD4376DC1D11E8C200E6E353 /* DVOLocationEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4376DB1D11E8C200E6E353 /* DVOLocationEditViewController.swift */; };
 		CD4376DE1D1311B600E6E353 /* DVOSearchableName.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4376DD1D1311B600E6E353 /* DVOSearchableName.swift */; };
+		CD4DC4D01DB1835C00E5D515 /* DVOAddDancerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4DC4CF1DB1835C00E5D515 /* DVOAddDancerViewController.swift */; };
 		CD71961D1D0200C600A49D11 /* DVODateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71961C1D0200C600A49D11 /* DVODateFormatter.swift */; };
 		CD71961F1D02172D00A49D11 /* DVOTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71961E1D02172D00A49D11 /* DVOTextField.swift */; };
 		CD7196221D02175A00A49D11 /* DVOInputAccessoryBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = CD7196201D02175A00A49D11 /* DVOInputAccessoryBar.xib */; };
@@ -67,6 +68,7 @@
 		CD4376D81D11E72800E6E353 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		CD4376DB1D11E8C200E6E353 /* DVOLocationEditViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOLocationEditViewController.swift; sourceTree = "<group>"; };
 		CD4376DD1D1311B600E6E353 /* DVOSearchableName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOSearchableName.swift; sourceTree = "<group>"; };
+		CD4DC4CF1DB1835C00E5D515 /* DVOAddDancerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOAddDancerViewController.swift; sourceTree = "<group>"; };
 		CD71961C1D0200C600A49D11 /* DVODateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVODateFormatter.swift; sourceTree = "<group>"; };
 		CD71961E1D02172D00A49D11 /* DVOTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DVOTextField.swift; sourceTree = "<group>"; };
 		CD7196201D02175A00A49D11 /* DVOInputAccessoryBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DVOInputAccessoryBar.xib; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				CD4376DB1D11E8C200E6E353 /* DVOLocationEditViewController.swift */,
 				CD9A510A1D04C0FD00BD6E06 /* DVODancerTableViewController.swift */,
 				CDF6B3B91D0628850029FB30 /* DVODateEntryViewController.swift */,
+				CD4DC4CF1DB1835C00E5D515 /* DVOAddDancerViewController.swift */,
 			);
 			name = "Detail Views";
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				CDD2BD331D13719100D1634E /* CompRound.swift in Sources */,
 				CD7196281D023D3500A49D11 /* DVOLocationTableViewController.swift in Sources */,
 				CD8A7E591CF79BE300D7DC01 /* DVOCoreData.swift in Sources */,
+				CD4DC4D01DB1835C00E5D515 /* DVOAddDancerViewController.swift in Sources */,
 				CD8A7E771CF8B66C00D7DC01 /* VideoAssets.swift in Sources */,
 				CD8A7E861CFF85F600D7DC01 /* DVOMetaDataEntryLayout.swift in Sources */,
 				CDD2BD291D1322BF00D1634E /* DVOMetaDataTableViewController.swift in Sources */,

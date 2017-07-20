@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DVODancerTableViewController: UITableViewController, UISearchResultsUpdating {
+class DVODancerTableViewController: UITableViewController, UISearchResultsUpdating, UINavigationControllerDelegate {
 
     var metaData: VideoMetaData!
     var nameArray = [Dancer]()
@@ -18,6 +18,18 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.searchController.searchResultsUpdater = self
+        self.searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        self.tableView.tableHeaderView = searchController.searchBar
+        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        self.navigationController?.delegate = self
+
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        
+        self.nameArray.removeAll()
         let dancerFetchController = DVOCoreData.fetchDancers()
         do {
             try dancerFetchController.performFetch()
@@ -29,29 +41,19 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
                 }
             }
         } catch {
-            print("failed to fetch Studios")
+            print("failed to fetch Dancers")
         }
-        self.searchController.searchResultsUpdater = self
-        self.searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = true
-        self.tableView.tableHeaderView = searchController.searchBar
         self.filteredArray = self.nameArray
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveTouched))
-        self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+        self.tableView.reloadData()
 
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
-    func saveTouched() {
+    @IBAction func saveTouched() {
         if let dancers = self.selectedDancers {
             self.metaData.instructors?.removeAll()
             for (_,dancer) in dancers {
@@ -60,6 +62,9 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
             }
         }
         _ = self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func addTouched() {
     }
     
     func filterContentForSearchText(_ searchText: String, scope: String = "All") {
@@ -101,13 +106,14 @@ class DVODancerTableViewController: UITableViewController, UISearchResultsUpdati
         let cell = self.tableView.cellForRow(at: indexPath)
         cell?.accessoryType = .checkmark
         self.tableView.deselectRow(at: indexPath, animated: true)
-        if self.selectedDancers![self.filteredArray[(indexPath as NSIndexPath).item].name!] == nil {
-            self.selectedDancers![self.filteredArray[(indexPath as NSIndexPath).item].name!] = self.filteredArray[(indexPath as NSIndexPath).item]
+        if self.selectedDancers![self.filteredArray[indexPath.item].name!] == nil {
+            self.selectedDancers![self.filteredArray[indexPath.item].name!] = self.filteredArray[indexPath.item]
         } else {
-            self.selectedDancers![self.filteredArray[(indexPath as NSIndexPath).item].name!] = nil
+            self.selectedDancers![self.filteredArray[(indexPath).item].name!] = nil
             self.tableView.reloadData()
         }
-        
+        self.searchController.isActive = false
+
     }
 
 }

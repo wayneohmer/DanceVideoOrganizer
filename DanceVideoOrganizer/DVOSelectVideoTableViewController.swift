@@ -128,7 +128,7 @@ class DVOSelectVideoTableViewController: UITableViewController {
         cell.locationKeyLabel.text = asset.locationKey
         cell.dateLabel.text = DVODateFormatter.formattedDate(asset.creationDate)
         cell.videoThumbNailImage.image = asset.thumbNail
-        cell.videoThumbNailImage.contentMode = .scaleAspectFit
+        //cell.videoThumbNailImage.contentMode = .scaleAspectFit
         cell.layoutIfNeeded()
         return cell
     }

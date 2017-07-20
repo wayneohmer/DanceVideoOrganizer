@@ -9,6 +9,10 @@
 import UIKit
 import CoreData
 
+enum VideoClassification: Int {
+    case instructional = 0, competition, inspirational
+}
+
 class DVOMetaDataEntryLayout: NSObject {
     
     struct CellData {
@@ -58,11 +62,11 @@ class DVOMetaDataEntryLayout: NSObject {
         let asset = DVOCoreData.fetchVideoAssetWithIdentifier(videoAsset.assetLocalIdentifier)
         self.metaData.asset = asset
         
-        self.cellDict = [VideoMetaDataAttributes.title: CellData(description: "Title", data: self.metaData.title ?? "", visible: true, destination: self.handleTitle),
-                         VideoMetaDataAttributes.location: CellData(description: "Location", data: self.metaData.location, visible: true, destination: self.handleLocation),
-                         VideoMetaDataAttributes.instructors: CellData(description: "Instructor(s)", data: instructorName, visible: true, destination: self.handleInstructor),
-                         VideoMetaDataAttributes.CompRound: CellData(description: "Comp", data: "", visible: false, destination: self.handleComp),
-                         VideoMetaDataAttributes.date: CellData(description: "Date", data: DVODateFormatter.formattedDate(self.metaData.date), visible: true, destination: self.handleDate)]
+        self.cellDict = [VideoMetaDataAttributes.title: CellData(description: "Title:", data: self.metaData.title ?? "", visible: true, destination: self.handleTitle),
+                         VideoMetaDataAttributes.location: CellData(description: "Location:", data: self.metaData.location, visible: true, destination: self.handleLocation),
+                         VideoMetaDataAttributes.instructors: CellData(description: "Instructor:", data: instructorName, visible: true, destination: self.handleInstructor),
+                         VideoMetaDataAttributes.CompRound: CellData(description: "Comp:", data: "", visible: false, destination: self.handleComp),
+                         VideoMetaDataAttributes.date: CellData(description: "Date:", data: DVODateFormatter.formattedDate(self.metaData.date), visible: true, destination: self.handleDate)]
     
     }
     
@@ -102,19 +106,23 @@ class DVOMetaDataEntryLayout: NSObject {
     }
     
     func handleTypeChange(_ type: Int) {
-        switch type {
-        case 0:
-            self.cellDict[VideoMetaDataAttributes.instructors]?.description = "Instructor(s):"
+        let classification:VideoClassification = VideoClassification(rawValue: type) ?? VideoClassification.instructional
+        switch classification {
+        case .instructional :
+            self.cellDict[VideoMetaDataAttributes.instructors]?.description = "Instructor:"
             self.cellDict[VideoMetaDataAttributes.CompRound]?.visible = false
-        case 1:
-            self.cellDict[VideoMetaDataAttributes.instructors]?.description = "Dancer(s):"
+            self.cellDict[VideoMetaDataAttributes.title]?.visible = true
+
+        case .competition:
+            self.cellDict[VideoMetaDataAttributes.instructors]?.description = "Dancer:"
             self.cellDict[VideoMetaDataAttributes.CompRound]?.visible = true
-        case 2:
-            self.cellDict[VideoMetaDataAttributes.instructors]?.description = "Dancer(s):"
+            self.cellDict[VideoMetaDataAttributes.title]?.visible = false
+            
+        case .inspirational:
+            self.cellDict[VideoMetaDataAttributes.instructors]?.description = "Dancer:"
             self.cellDict[VideoMetaDataAttributes.CompRound]?.visible = false
-            break
-        default:
-            break
+            self.cellDict[VideoMetaDataAttributes.title]?.visible = true
+
         }
     }
     
@@ -132,6 +140,11 @@ class DVOMetaDataEntryLayout: NSObject {
                 intructorNames = [defaultInstructor]
                 self.metaData.instructors = Set([self.metaData.studio!.defaultInstructor!])
             }
+        }
+        if (self.metaData.instructors?.count)! > 1 {
+            self.cellDict[VideoMetaDataAttributes.instructors]?.description = self.cellDict[VideoMetaDataAttributes.instructors]?.description.replacingOccurrences(of: "r:", with: "rs:") ?? ""
+        } else {
+            self.cellDict[VideoMetaDataAttributes.instructors]?.description = self.cellDict[VideoMetaDataAttributes.instructors]?.description.replacingOccurrences(of: "rs:", with: "r:") ?? ""
         }
         self.cellDict[VideoMetaDataAttributes.instructors]!.data = intructorNames.joined(separator: ", ")
         self.cellDict[VideoMetaDataAttributes.date]!.data = DVODateFormatter.formattedDate(self.metaData.date)
